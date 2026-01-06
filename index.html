@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADHD Focus Helper Pro Max</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container { max-width: 800px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p { font-size: 1.1em; opacity: 0.9; }
+
+        .level-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            z-index: 999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-size: 0.9em;
+        }
+
+        .nav-scroll {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 998;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav-scroll.hidden-nav {
+            display: none;
+        }
+
+        .nav-scroll-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .nav-scroll-btn:active {
+            transform: scale(0.95);
+        }
+
+        .nav-scroll-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-scroll-label {
+            position: absolute;
+            right: 50px;
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            white-space: nowrap;
+            display: none;
+            z-index: 999;
+        }
+
+        .nav-scroll-btn:hover .nav-scroll-label {
+            display: block;
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: var(--dark);
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            margin: 10px 10px 10px 0;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(74,144,226,0.4); }
+        .btn:active { transform: translateY(0px); }
+        .btn-success { background: var(--success); }
+        .btn-success:hover { box-shadow: 0 5px 15px rgba(46,204,113,0.4); }
+        .btn-danger { background: var(--danger); }
+        .btn-danger:hover { box-shadow: 0 5px 15px rgba(231,76,60,0.4); }
+        .btn-small { padding: 8px 16px; font-size: 0.9em; }
+
+        .question-group {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .question-group label {
+            display: block;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        .tip {
+            background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--warning);
+            display: flex;
+            gap: 10px;
+        }
+
+        .tip i { color: var(--warning); font-size: 1.3em; flex-shrink: 0; }
+
+        .score-card {
+            background: linear-gradient(135deg, var(--primary) 0%, #357abd 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-card .number {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .score-card .level {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .task-list { list-style: none; }
+
+        .task-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+        }
+
+        .task-item.completed {
+            background: #d4edda;
+            opacity: 0.7;
+            border-left-color: var(--success);
+        }
+
+        .task-item.completed span { text-decoration: line-through; }
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        #timer {
+            text-align: center;
+            font-size: 5em;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .timer-display { text-align: center; }
+
+        #progress {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .progress-summary {
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .progress-summary .percentage {
+            font-size: 2em;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-card .label {
+            color: var(--dark);
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        .mindfulness-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .breath-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .breath-circle:hover {
+            background: rgba(255,255,255,0.5);
+            transform: scale(1.05);
+        }
+
+        @keyframes breathPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
+            50% { transform: scale(1.15); box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+        }
+
+        .breath-circle.breathing {
+            animation: breathPulse 4s infinite;
+        }
+
+        @keyframes confetti {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--x), 600px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            animation: confetti 3s ease-in forwards;
+        }
+
+        .hidden { display: none; }
+
+        .success-message {
+            background: #d4edda;
+            border-left: 4px solid var(--success);
+            padding: 15px;
+            border-radius: 8px;
+            color: #155724;
+            margin: 15px 0;
+        }
+
+        .energy-indicator {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .energy-bar {
+            flex: 1;
+            height: 10px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .energy-bar.active {
+            background: linear-gradient(to right, #2ecc71, #f39c12);
+            box-shadow: 0 0 10px rgba(46,204,113,0.4);
+        }
+
+        .routine-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .routine-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .emotion-log {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .info-text {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            border-left: 3px solid var(--warning);
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8em; }
+            #timer { font-size: 3em; }
+            .section { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-brain"></i> ADHD Focus Helper Pro Max</h1>
+            <p>基於CBT的焦點訓練 • 習慣養成 • 進度追蹤</p>
+            <div class="level-badge"><i class="fas fa-gamepad"></i> <span id="levelDisplay">Lv.1</span> | <span id="xpDisplay">0 XP</span></div>
+        </header>
+
+        <!-- Quiz Section -->
+        <div id="quiz" class="section">
+            <h2><i class="fas fa-clipboard-list"></i> ADHD 快速評估</h2>
+            <p style="margin-bottom: 20px;">回答10個問題 (1=從不, 5=總是)，瞭解你的專注力狀態</p>
+            <div id="questions"></div>
+            <button class="btn" id="startQuizBtn" onclick="startQuiz(); event.preventDefault(); return false;"><i class="fas fa-play"></i> 開始評估</button>
+            <button class="btn btn-success hidden" id="submitQuiz" onclick="generatePlan(); event.preventDefault(); return false;"><i class="fas fa-check"></i> 生成個人計劃</button>
+        </div>
+
+        <!-- Plan Section -->
+        <div id="plan" class="section hidden">
+            <h2><i class="fas fa-target"></i> 你的個人焦點計劃</h2>
+            
+            <div class="score-card">
+                <div>ADHD傾向評分</div>
+                <div class="number" id="score">--</div>
+                <div class="level" id="level">評估中...</div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+                <h3 style="margin: 0;"><i class="fas fa-lightbulb"></i> 今日練習重點</h3>
+                <button class="btn btn-success" onclick="retakeQuiz()" style="margin: 0;"><i class="fas fa-redo"></i> 重新測驗</button>
+            </div>
+            <div id="dailyTips"></div>
+
+            <!-- Energy Level & Task Difficulty -->
+            <h3 id="energySection"><i class="fas fa-battery-three-quarters"></i> 自我檢測當前精力水平</h3>
+            <div class="energy-indicator" id="energyLevel"></div>
+            <p style="color: #666; font-size: 0.9em; margin-top: 10px;">根據你的精力水平，推薦以下任務難度：</p>
+            <div id="taskRecommendation" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0;"></div>
+
+            <!-- Morning & Evening Routines -->
+            <h3 id="routineSection"><i class="fas fa-calendar-check"></i> 推薦例行程序</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px;">
+                    <h4><i class="fas fa-sunrise"></i> 晨間例行 <span id="morningProgress" style="font-size: 0.8em; opacity: 0.8;"></span></h4>
+                    <div id="morningRoutine"></div>
+                </div>
+                <div style="background: linear-gradient(135deg, #e74c3c 0%, #c0232b 100%); color: white; padding: 20px; border-radius: 8px;">
+                    <h4><i class="fas fa-moon"></i> 晚間例行 <span id="eveningProgress" style="font-size: 0.8em; opacity: 0.8;"></span></h4>
+                    <div id="eveningRoutine"></div>
+                </div>
+            </div>
+
+            <!-- CBT Practices -->
+            <div class="mindfulness-section" id="cbtSection">
+                <h3 style="color: white; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-spa"></i> CBT焦點練習工具
+                </h3>
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <h4 style="color: white; margin-bottom: 10px;"><i class="fas fa-wind"></i> 正念呼吸練習</h4>
+                    <p style="font-size: 0.95em; margin-bottom: 10px;">點擊圓圈開始呼吸練習，跟著脈衝節奏降低焦慮。</p>
+                    <div id="breathCircle" class="breath-circle" onclick="startBreathPractice(); event.preventDefault(); return false;">
+                        <span id="breathText">點擊開始</span>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <h4 style="color: white; margin-bottom: 10px;"><i class="fas fa-brain"></i> 認知重構練習</h4>
+                    <button class="btn" onclick="openThoughtRecord()" style="background: rgba(255,255,255,0.9); color: var(--dark); width: 100%;"><i class="fas fa-edit"></i> 開始練習</button>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                    <h4 style="color: white; margin-bottom: 10px;"><i class="fas fa-leaf"></i> 5-4-3-2-1接地技巧</h4>
+                    <button class="btn" onclick="startGrounding()" style="background: rgba(255,255,255,0.9); color: var(--dark); width: 100%;"><i class="fas fa-play"></i> 開始接地</button>
+                </div>
+            </div>
+
+            <!-- Modals -->
+            <div id="thoughtRecordModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000;">
+                <div style="background: white; padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                    <h2 style="color: var(--primary); margin-bottom: 20px;">認知重構練習</h2>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 5px;">負面想法：</label>
+                        <textarea id="negativThought" placeholder="例如：我永遠無法完成這個任務..." style="width: 100%; padding: 10px; border: 2px solid var(--light); border-radius: 6px; font-family: inherit; font-size: 1em;" rows="3"></textarea>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 5px;">證據支持這個想法：</label>
+                        <textarea id="evidence" placeholder="列舉事實證據..." style="width: 100%; padding: 10px; border: 2px solid var(--light); border-radius: 6px; font-family: inherit; font-size: 1em;" rows="3"></textarea>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 5px;">更現實的想法：</label>
+                        <textarea id="realisticThought" placeholder="例如：我可以分小步驟完成..." style="width: 100%; padding: 10px; border: 2px solid var(--light); border-radius: 6px; font-family: inherit; font-size: 1em;" rows="3"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-success" onclick="saveThoughtRecord()" style="flex: 1;"><i class="fas fa-check"></i> 練習完成</button>
+                        <button class="btn" onclick="closeThoughtRecord()" style="flex: 1; background: #999;"><i class="fas fa-times"></i> 關閉</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="groundingModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000;">
+                <div style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; text-align: center;">
+                    <h2 style="color: var(--primary); margin-bottom: 20px;">5-4-3-2-1 接地技巧</h2>
+                    <div id="groundingSteps" style="margin: 20px 0;"></div>
+                    <button class="btn" onclick="closeGrounding()" style="width: 100%;"><i class="fas fa-times"></i> 完成練習</button>
+                </div>
+            </div>
+
+            <!-- Task Decomposition & Management -->
+            <h3 id="taskSection"><i class="fas fa-tasks"></i> 智能任務管理</h3>
+            <p style="color: #666; font-size: 0.95em; margin-bottom: 15px;">將大任務自動分解，或手動添加小步驟</p>
+            
+            <div class="input-group">
+                <input type="text" id="newTask" placeholder="例如：編輯影片片段..." onkeypress="if(event.key==='Enter') addTask()">
+                <button class="btn btn-success" onclick="addTask()"><i class="fas fa-plus"></i> 新增</button>
+                <button class="btn" onclick="openTaskDecompose()" title="自動分解任務"><i class="fas fa-sitemap"></i> 分解</button>
+            </div>
+
+            <!-- Task Decompose Modal -->
+            <div id="decomposeModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000;">
+                <div style="background: white; padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                    <h2 style="color: var(--primary); margin-bottom: 20px;">任務分解設定</h2>
+                    <p style="color: #666; margin-bottom: 15px;">編輯每個步驟的內容：</p>
+                    <div id="decomposeStepsContainer"></div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="btn btn-success" onclick="confirmTaskDecompose()" style="flex: 1;"><i class="fas fa-check"></i> 確認分解</button>
+                        <button class="btn" onclick="closeTaskDecompose()" style="flex: 1; background: #999;"><i class="fas fa-times"></i> 關閉</button>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="task-list" id="tasks"></ul>
+
+            <div class="progress-summary" id="progressSummary">
+                <div style="font-size: 0.9em; color: #666;">進度</div>
+                <div class="percentage" id="percentage">0%</div>
+                <div id="progressText" style="color: #666; font-size: 0.9em; margin-top: 5px;"></div>
+            </div>
+
+            <!-- Pomodoro Timer -->
+            <h3 id="timerSection"><i class="fas fa-hourglass-start"></i> 番茄焦點計時</h3>
+            <div style="display: flex; align-items: center; gap: 15px; margin: 20px 0; background: #f8f9fa; padding: 15px; border-radius: 8px; flex-wrap: wrap;">
+                <label style="font-weight: 500; color: var(--dark); min-width: 100px;">計時分鐘數：</label>
+                <input type="range" id="timerMinutes" min="1" max="60" value="25" step="1" style="flex: 1; cursor: pointer; height: 8px; border-radius: 5px; background: linear-gradient(to right, #e74c3c, #f39c12, #2ecc71); min-width: 100px;">
+                <span id="timerMinutesDisplay" style="min-width: 50px; text-align: center; font-weight: bold; color: var(--primary); font-size: 1.2em;">25</span>
+                <span style="color: #666;">分鐘</span>
+            </div>
+
+            <!-- Timer Sound Settings -->
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <h4 style="margin-bottom: 15px;"><i class="fas fa-volume-up"></i> 計時器鬧鐘設定</h4>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <label style="font-weight: 500;">鬧鐘開關：</label>
+                    <button class="btn btn-small" id="timerSoundToggle" onclick="toggleTimerSound()" style="margin: 0;">
+                        <i class="fas fa-volume-up"></i> <span id="timerSoundStatus">開啟</span>
+                    </button>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <label style="font-weight: 500; min-width: 80px;">音量調整：</label>
+                    <input type="range" id="timerVolume" min="0" max="100" value="50" style="flex: 1; cursor: pointer; min-width: 100px;">
+                    <span id="timerVolumeDisplay" style="min-width: 50px; text-align: center; font-weight: bold; color: var(--primary);">50%</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px; flex-wrap: wrap;">
+                    <label style="font-weight: 500; min-width: 80px;">鬧鈴聲音：</label>
+                    <select id="timerSoundType" style="flex: 1; padding: 8px; border: 2px solid var(--light); border-radius: 6px; min-width: 150px;">
+                        <option value="bell">清脆鈴聲 🔔</option>
+                        <option value="chime">悅耳音色 ✨</option>
+                        <option value="alert">警告聲 ⚠️</option>
+                        <option value="digital">科技感 🤖</option>
+                    </select>
+                    <button class="btn btn-small" onclick="testTimerSound()" style="margin: 0;"><i class="fas fa-play"></i> 測試</button>
+                </div>
+            </div>
+            
+            <div class="timer-display">
+                <div id="timer">25:00</div>
+                <div id="progress"><div class="bar" id="progressBar"><span id="timerPercent">0%</span></div></div>
+                
+                <button class="btn btn-success" id="startTimer" onclick="startTimer()"><i class="fas fa-play"></i> 開始計時</button>
+                <button class="btn btn-danger hidden" id="stopTimer" onclick="stopTimer()"><i class="fas fa-stop"></i> 停止</button>
+                
+                <div id="timerMessage"></div>
+            </div>
+
+            <!-- Emotion Tracking -->
+            <h3 id="emotionSection"><i class="fas fa-heart"></i> 情緒追蹤日誌</h3>
+            <div style="display: flex; gap: 10px; margin: 10px 0; justify-content: space-around; flex-wrap: wrap;">
+                <button class="btn btn-small" onclick="logEmotion('😄', '高興'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😄</span> 高興</button>
+                <button class="btn btn-small" onclick="logEmotion('😐', '平靜'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😐</span> 平靜</button>
+                <button class="btn btn-small" onclick="logEmotion('😞', '沮喪'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😞</span> 沮喪</button>
+                <button class="btn btn-small" onclick="logEmotion('😰', '焦慮'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😰</span> 焦慮</button>
+            </div>
+            <div id="emotionLog"></div>
+
+            <!-- Daily Streak -->
+            <h3 id="streakSection"><i class="fas fa-fire"></i> 連續打卡</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="value" id="streak">0</div>
+                    <div class="label">天連續使用</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="totalMinutes">0</div>
+                    <div class="label">專注分鐘</div>
+                </div>
+            </div>
+
+            <!-- Quiz History -->
+            <h3 id="historySection"><i class="fas fa-history"></i> 測驗歷史記錄</h3>
+            <div id="quizHistory" style="background: #f8f9fa; padding: 20px; border-radius: 8px; max-height: 300px; overflow-y: auto;"></div>
+
+            <!-- Email Report Section -->
+            <h3 id="emailSection"><i class="fas fa-envelope"></i> 傳送報告到Email</h3>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                <p style="color: #333; margin-bottom: 15px;">將您的進度報告發送到電子郵件，以便備份和追蹤。</p>
+                <div class="input-group">
+                    <input type="email" id="userEmail" placeholder="example@email.com" style="flex: 1;">
+                    <button class="btn btn-success" onclick="sendReportToEmail(); event.preventDefault(); return false;" style="margin: 0;"><i class="fas fa-paper-plane"></i> 發送報告</button>
+                </div>
+                <div id="emailStatus" style="margin-top: 10px; color: #666; font-size: 0.9em;"></div>
+                <div class="info-text">
+                    <i class="fas fa-info-circle"></i> <strong>重要提示：</strong>當前所有紀錄只會儲存在此裝置。如需在電子郵件保存報告副本，請輸入您的郵件地址並發送報告。系統會自動開啟您的郵件應用程式，您可以手動發送或將報告複製到剪貼板。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Scroll -->
+    <div class="nav-scroll">
+        <button class="nav-scroll-btn" onclick="scrollToSection('energySection')">
+            <i class="fas fa-battery-three-quarters"></i>
+            <span class="nav-scroll-label">精力檢測</span>
+        </button>
+        <button class="nav-scroll-btn" onclick="scrollToSection('routineSection')">
+            <i class="fas fa-calendar-check"></i>
+            <span class="nav-scroll-label">例行程序</span>
+        </button>
+        <button class="nav-scroll-btn" onclick="scrollToSection('cbtSection')">
+            <i class="fas fa-spa"></i>
+            <span class="nav-scroll-label">心理工具</span>
+        </button>
+        <button class="nav-scroll-btn" onclick="scrollToSection('taskSection')">
+            <i class="fas fa-tasks"></i>
+            <span class="nav-scroll-label">任務管理</span>
+        </button>
+        <button class="nav-scroll-btn" onclick="scrollToSection('timerSection')">
+            <i class="fas fa-hourglass-start"></i>
+            <span class="nav-scroll-label">計時器</span>
+        </button>
+        <button class="nav-scroll-btn" onclick="scrollToSection('emotionSection')">
+            <i class="fas fa-heart"></i>
+            <span class="nav-scroll-label">情緒追蹤</span>
+        </button>
+        <button class="nav-scroll-btn" onclick="scrollToSection('streakSection')">
+            <i class="fas fa-fire"></i>
+            <span class="nav-scroll-label">連續打卡</span>
+        </button>
+        <button class="nav-scroll-btn" onclick="scrollToSection('historySection')">
+            <i class="fas fa-history"></i>
+            <span class="nav-scroll-label">歷史記錄</span>
+        </button>
+        <button class="nav-scroll-btn" onclick="scrollToSection('emailSection')">
+            <i class="fas fa-envelope"></i>
+            <span class="nav-scroll-label">發送報告</span>
+        </button>
+    </div>
+
+    <script>
+        const questions = [
+            '我經常拖延任務直到最後一刻。',
+            '我難以維持注意力在無趣工作上。',
+            '我容易分心於無關事物。',
+            '我容易忘記回覆訊息、支付帳單或完成預定任務。',
+            '我衝動行事而不考慮後果。',
+            '我容易感到不耐煩或挫折。',
+            '我難以遵循指示或完成多步驟任務。',
+            '我經常中斷他人或衝動說話。',
+            '我的情緒變化很快。',
+            '我難以組織東西或管理時間。'
+        ];
+
+        let score = 0;
+        let answers = [];
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let stats = JSON.parse(localStorage.getItem('stats')) || { streak: 0, totalSessions: 0, totalMinutes: 0, lastDate: null, level: 1, xp: 0 };
+        let quizHistory = JSON.parse(localStorage.getItem('quizHistory')) || [];
+        let emotionHistory = JSON.parse(localStorage.getItem('emotionHistory')) || [];
+        let routineCompletedToday = JSON.parse(localStorage.getItem('routineCompletedToday')) || { morning: false, evening: false, date: new Date().toDateString() };
+        let currentEnergy = 3;
+        let timerInterval;
+        let timerDuration = 25 * 60;
+        let timeLeft = 25 * 60;
+        let isRunning = false;
+        let isBreathing = false;
+        let hasCompletedQuiz = localStorage.getItem('hasCompletedQuiz') === 'true';
+        let timerSoundEnabled = localStorage.getItem('timerSoundEnabled') !== 'false';
+        let timerVolume = parseInt(localStorage.getItem('timerVolume')) || 50;
+        let timerSoundType = localStorage.getItem('timerSoundType') || 'bell';
+
+        let audioContext;
+
+        function startQuiz() {
+            const qDiv = document.getElementById('questions');
+            qDiv.innerHTML = '';
+            
+            questions.forEach((q, i) => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'question-group';
+                
+                const label = document.createElement('label');
+                label.textContent = `${i + 1}. ${q}`;
+                
+                const sliderContainer = document.createElement('div');
+                sliderContainer.style.cssText = 'display: flex; align-items: center; gap: 10px; margin-top: 10px;';
+                
+                const sliderInput = document.createElement('input');
+                sliderInput.type = 'range';
+                sliderInput.id = `q${i}`;
+                sliderInput.min = '1';
+                sliderInput.max = '5';
+                sliderInput.value = '3';
+                sliderInput.style.cssText = 'flex: 1; cursor: pointer; height: 8px; border-radius: 5px; background: linear-gradient(to right, #e74c3c 0%, #f39c12 25%, #2ecc71 100%);';
+                
+                const valueDisplay = document.createElement('span');
+                valueDisplay.id = `val${i}`;
+                valueDisplay.textContent = '3';
+                valueDisplay.style.cssText = 'min-width: 40px; text-align: center; font-weight: bold; color: var(--primary); font-size: 1.2em;';
+                
+                const labels = ['從不', '少有', '有時', '經常', '總是'];
+                const labelDisplay = document.createElement('span');
+                labelDisplay.id = `label${i}`;
+                labelDisplay.textContent = labels[2];
+                labelDisplay.style.cssText = 'min-width: 60px; text-align: left; font-size: 0.9em; color: #666;';
+                
+                sliderInput.addEventListener('input', (e) => {
+                    const val = e.target.value;
+                    valueDisplay.textContent = val;
+                    labelDisplay.textContent = labels[val - 1];
+                });
+                
+                sliderContainer.appendChild(sliderInput);
+                sliderContainer.appendChild(valueDisplay);
+                sliderContainer.appendChild(labelDisplay);
+                
+                groupDiv.appendChild(label);
+                groupDiv.appendChild(sliderContainer);
+                qDiv.appendChild(groupDiv);
+            });
+            
+            document.querySelector('#quiz .btn').style.display = 'none';
+            document.getElementById('submitQuiz').classList.remove('hidden');
+        }
+
+        function retakeQuiz() {
+            document.getElementById('quiz').classList.remove('hidden');
+            document.getElementById('plan').classList.add('hidden');
+            startQuiz();
+        }
+
+        function generatePlan() {
+            answers = [];
+            let allAnswered = true;
+            
+            for (let i = 0; i < 10; i++) {
+                const slider = document.getElementById(`q${i}`);
+                if (!slider) {
+                    allAnswered = false;
+                    break;
+                }
+                const value = parseInt(slider.value) || 3;
+                answers.push(value);
+            }
+            
+            if (!allAnswered || answers.length !== 10) {
+                alert('請先回答所有10個問題！');
+                return;
+            }
+            
+            score = answers.reduce((a, b) => a + b, 0);
+
+            const testRecord = {
+                date: new Date().toLocaleString('zh-TW'),
+                score: score
+            };
+            quizHistory.push(testRecord);
+            localStorage.setItem('quizHistory', JSON.stringify(quizHistory));
+            localStorage.setItem('hasCompletedQuiz', 'true');
+            hasCompletedQuiz = true;
+
+            document.getElementById('quiz').classList.add('hidden');
+            document.getElementById('plan').classList.remove('hidden');
+
+            let level, advice;
+            if (score < 15) {
+                level = '輕微傾向';
+                advice = '很好！你的ADHD傾向輕微。透過日常習慣優化，專注力可快速改善。';
+            } else if (score < 25) {
+                level = '中等傾向';
+                advice = '中等程度ADHD症狀。結合運動、冥想與結構化計劃，6週內可見顯著進展。';
+            } else if (score < 35) {
+                level = '較明顯傾向';
+                advice = '較明顯ADHD症狀。建議同時進行本計劃與專業評估（身心科/精神科）。';
+            } else {
+                level = '嚴重傾向';
+                advice = '症狀較嚴重，請優先尋求專業醫療評估。此工具可作為輔助。';
+            }
+
+            document.getElementById('score').textContent = score + '/50';
+            document.getElementById('level').textContent = level;
+
+            const tips = [
+                '分解任務成5-10分鐘小步驟，避免過載。',
+                '每日練習正念呼吸：吸4秒、憋4秒、吐4秒，重複5次。',
+                '設定環境：移除手機通知，專注當前任務。',
+                '慶祝小勝利：完成任務後記錄成就。',
+                '結合運動：計時後散步5分鐘。',
+                '確保每晚8小時連續睡眠，規律三餐。',
+                '每週運動3-5次，中等強度有氧運動最有效。'
+            ];
+
+            const tipCount = Math.min(5, Math.ceil(score / 10));
+            const selectedTips = tips.slice(0, tipCount);
+            document.getElementById('dailyTips').innerHTML = 
+                `<div class="success-message"><i class="fas fa-info-circle"></i> ${advice}</div>` +
+                selectedTips.map(t => 
+                    `<div class="tip"><i class="fas fa-star"></i> <div>${t}</div></div>`
+                ).join('');
+
+            updateStats();
+            renderQuizHistory();
+            renderEnergyLevel();
+            renderRoutines();
+            loadTasks();
+            updateProgress();
+        }
+
+        function renderEnergyLevel() {
+            const energyDiv = document.getElementById('energyLevel');
+            let html = '';
+            for (let i = 1; i <= 5; i++) {
+                html += `<div class="energy-bar ${i <= currentEnergy ? 'active' : ''}" onclick="setEnergy(${i})" title="點擊設定精力水平"></div>`;
+            }
+            energyDiv.innerHTML = html;
+
+            const recommendations = {
+                1: '🔴 低能量 → 簡單任務：檢查郵件、整理桌子、喝水休息',
+                2: '🟠 略低能量 → 中等任務：回覆訊息、整理文件、簡單編輯',
+                3: '🟡 中等能量 → 常規任務：大多數工作、錄音、內容策劃',
+                4: '🟢 高能量 → 困難任務：創意項目、複雜編輯、重要會議',
+                5: '🟢 超高能量 → 挑戰任務：全天拍攝、複雜製作、創意突破'
+            };
+            
+            const energyTasks = {
+                1: ['✅ 喝一杯咖啡或茶', '✅ 做5分鐘伸展運動', '✅ 聽喜歡的歌曲'],
+                2: ['✅ 散步5分鐘', '✅ 做簡單的文書工作', '✅ 回覆簡短訊息'],
+                3: ['✅ 完成日常工作', '✅ 進行中等複雜度任務', '✅ 參加會議'],
+                4: ['✅ 開始創意項目', '✅ 進行深度工作', '✅ 學習新技能'],
+                5: ['✅ 啟動重大項目', '✅ 解決複雜問題', '✅ 進行長時間製作']
+            };
+
+            const recommendation = recommendations[currentEnergy];
+            const suggestedTasks = energyTasks[currentEnergy].join(' | ');
+            document.getElementById('taskRecommendation').innerHTML = `
+                <div style="margin-bottom: 10px;"><strong>${recommendation}</strong></div>
+                <div style="font-size: 0.9em; color: #666;">${suggestedTasks}</div>
+            `;
+        }
+
+        function setEnergy(level) {
+            currentEnergy = level;
+            localStorage.setItem('currentEnergy', level);
+            renderEnergyLevel();
+            addXP(10, '⚡ 設定精力水平');
+        }
+
+        function renderRoutines() {
+            const morning = [
+                { text: '起床', icon: '⏰', hint: '設定三個鬧鐘' },
+                { text: '正念呼吸', icon: '🧘', hint: '' },
+                { text: '洗澡和梳洗', icon: '🚿', hint: '' },
+                { text: '健康早餐', icon: '🍽️', hint: '' },
+                { text: '檢查優先任務', icon: '📝', hint: '' }
+            ];
+
+            const evening = [
+                { text: '放下手機', icon: '📱', hint: '' },
+                { text: '放鬆呼吸', icon: '🧘', hint: '' },
+                { text: '寫下明天計劃', icon: '📔', hint: '' },
+                { text: '準備睡眠環境', icon: '🛏️', hint: '' },
+                { text: '按時睡眠', icon: '😴', hint: '' }
+            ];
+
+            const today = new Date().toDateString();
+            if (routineCompletedToday.date !== today) {
+                routineCompletedToday = { morning: false, evening: false, steps: {}, date: today };
+            }
+
+            let morningCompleted = 0;
+            document.getElementById('morningRoutine').innerHTML = morning.map((r, i) => {
+                const stepKey = `morning_${i}`;
+                const isCompleted = routineCompletedToday.steps && routineCompletedToday.steps[stepKey];
+                if (isCompleted) morningCompleted++;
+                return `
+                <div style="margin: 8px 0; padding: 12px; background: rgba(255,255,255,${isCompleted ? '0.3' : '0.1'}); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: ${isCompleted ? '0.7' : '1'};">
+                    <div>
+                        <div style="font-weight: bold; ${isCompleted ? 'text-decoration: line-through;' : ''}">${r.icon} ${r.text}</div>
+                        ${r.hint ? `<div style="font-size: 0.85em; opacity: 0.8;">${r.hint}</div>` : ''}
+                    </div>
+                    <button class="btn btn-small" onclick="completeRoutineStep('morning', ${i})" style="background: rgba(255,255,255,0.9); color: var(--dark); margin: 0;"><i class="fas ${isCompleted ? 'fa-check-circle' : 'fa-circle'}"></i></button>
+                </div>
+            `}).join('');
+            document.getElementById('morningProgress').textContent = `(${morningCompleted}/${morning.length})`;
+
+            let eveningCompleted = 0;
+            document.getElementById('eveningRoutine').innerHTML = evening.map((r, i) => {
+                const stepKey = `evening_${i}`;
+                const isCompleted = routineCompletedToday.steps && routineCompletedToday.steps[stepKey];
+                if (isCompleted) eveningCompleted++;
+                return `
+                <div style="margin: 8px 0; padding: 12px; background: rgba(255,255,255,${isCompleted ? '0.3' : '0.1'}); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: ${isCompleted ? '0.7' : '1'};">
+                    <div>
+                        <div style="font-weight: bold; ${isCompleted ? 'text-decoration: line-through;' : ''}">${r.icon} ${r.text}</div>
+                        ${r.hint ? `<div style="font-size: 0.85em; opacity: 0.8;">${r.hint}</div>` : ''}
+                    </div>
+                    <button class="btn btn-small" onclick="completeRoutineStep('evening', ${i})" style="background: rgba(255,255,255,0.9); color: var(--dark); margin: 0;"><i class="fas ${isCompleted ? 'fa-check-circle' : 'fa-circle'}"></i></button>
+                </div>
+            `}).join('');
+            document.getElementById('eveningProgress').textContent = `(${eveningCompleted}/${evening.length})`;
+        }
+
+        function completeRoutineStep(type, index) {
+            const today = new Date().toDateString();
+            if (routineCompletedToday.date !== today) {
+                routineCompletedToday = { morning: false, evening: false, steps: {}, date: today };
+            }
+
+            const stepKey = `${type}_${index}`;
+            if (!routineCompletedToday.steps) {
+                routineCompletedToday.steps = {};
+            }
+
+            if (!routineCompletedToday.steps[stepKey]) {
+                routineCompletedToday.steps[stepKey] = true;
+                addXP(5, '✅ 完成例行步驟');
+            } else {
+                routineCompletedToday.steps[stepKey] = false;
+            }
+
+            renderRoutines();
+            localStorage.setItem('routineCompletedToday', JSON.stringify(routineCompletedToday));
+        }
+
+        function addTask() {
+            const input = document.getElementById('newTask');
+            if (input.value.trim()) {
+                tasks.push({ text: input.value, completed: false, date: new Date().toDateString() });
+                input.value = '';
+                saveTasks();
+                renderTasks();
+                updateProgress();
+            }
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            saveTasks();
+            renderTasks();
+            updateProgress();
+        }
+
+        function toggleTask(index) {
+            tasks[index].completed = !tasks[index].completed;
+            saveTasks();
+            renderTasks();
+            updateProgress();
+            if (tasks[index].completed) {
+                addXP(50, '✅ 完成任務');
+                showLevelUpAnimation();
+            }
+        }
+
+        function renderTasks() {
+            const ul = document.getElementById('tasks');
+            if (tasks.length === 0) {
+                ul.innerHTML = '<li style="text-align: center; color: #999; border: none;">還未新增任務，開始加入第一個吧！</li>';
+                return;
+            }
+            ul.innerHTML = tasks.map((task, i) => 
+                `<li class="task-item ${task.completed ? 'completed' : ''}">
+                    <span><i class="fas ${task.completed ? 'fa-check-circle' : 'fa-circle'}"></i> ${task.text}</span>
+                    <div class="task-actions">
+                        <button class="btn btn-small ${task.completed ? 'btn-danger' : 'btn-success'}" onclick="toggleTask(${i})">
+                            ${task.completed ? '取消' : '完成'}
+                        </button>
+                        <button class="btn btn-small btn-danger" onclick="deleteTask(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </li>`
+            ).join('');
+        }
+
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            renderTasks();
+        }
+
+        function updateProgress() {
+            const completed = tasks.filter(t => t.completed).length;
+            const total = tasks.length || 1;
+            const percentage = Math.round(completed / total * 100);
+            
+            document.getElementById('percentage').textContent = percentage + '%';
+            document.getElementById('progressText').textContent = `${completed} / ${total} 任務完成`;
+        }
+
+        function openTaskDecompose() {
+            const taskInput = document.getElementById('newTask').value;
+            if (!taskInput) {
+                alert('請先輸入一個任務！');
+                return;
+            }
+
+            const defaultSteps = [
+                `${taskInput} - 第1步：準備工作`,
+                `${taskInput} - 第2步：主要內容`,
+                `${taskInput} - 第3步：檢查和調整`,
+                `${taskInput} - 第4步：完成和保存`
+            ];
+
+            const container = document.getElementById('decomposeStepsContainer');
+            container.innerHTML = defaultSteps.map((step, i) => `
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 5px;">步驟 ${i + 1}：</label>
+                    <input type="text" id="decompose_step_${i}" value="${step}" style="width: 100%; padding: 10px; border: 2px solid var(--light); border-radius: 6px; font-size: 1em;" />
+                </div>
+            `).join('');
+
+            window.decomposeSteps = defaultSteps;
+            document.getElementById('decomposeModal').style.display = 'flex';
+        }
+
+        function confirmTaskDecompose() {
+            const steps = [];
+            for (let i = 0; i < 4; i++) {
+                const input = document.getElementById(`decompose_step_${i}`);
+                if (input) {
+                    steps.push(input.value || window.decomposeSteps[i]);
+                }
+            }
+
+            steps.forEach(step => {
+                tasks.push({ text: step, completed: false, date: new Date().toDateString() });
+            });
+
+            saveTasks();
+            renderTasks();
+            updateProgress();
+            document.getElementById('newTask').value = '';
+            closeTaskDecompose();
+            alert('✅ 任務已分解為4個小步驟！');
+        }
+
+        function closeTaskDecompose() {
+            document.getElementById('decomposeModal').style.display = 'none';
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                document.getElementById('startTimer').classList.add('hidden');
+                document.getElementById('stopTimer').classList.remove('hidden');
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+
+        function stopTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('startTimer').classList.remove('hidden');
+            document.getElementById('stopTimer').classList.add('hidden');
+            timeLeft = timerDuration;
+            updateTimerDisplay();
+            document.getElementById('timerMessage').innerHTML = '';
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            updateTimerDisplay();
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                document.getElementById('startTimer').classList.remove('hidden');
+                document.getElementById('stopTimer').classList.add('hidden');
+                
+                stats.totalSessions++;
+                stats.totalMinutes += Math.floor(timerDuration / 60);
+                updateStats();
+
+                if (timerSoundEnabled) {
+                    playSound(timerSoundType, timerVolume);
+                }
+
+                const mins = Math.floor(timerDuration / 60);
+                document.getElementById('timerMessage').innerHTML = 
+                    `<div class="success-message"><i class="fas fa-check-circle"></i> ${mins}分鐘計時完成！做得很好！</div>`;
+                
+                timeLeft = timerDuration;
+                updateTimerDisplay();
+            }
+        }
+
+        function updateTimerDisplay() {
+            const min = Math.floor(timeLeft / 60);
+            const sec = timeLeft % 60;
+            document.getElementById('timer').textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+            
+            const percentComplete = Math.round(((timerDuration - timeLeft) / timerDuration) * 100);
+            document.getElementById('progressBar').style.width = percentComplete + '%';
+            document.getElementById('timerPercent').textContent = percentComplete + '%';
+        }
+
+        function startBreathPractice() {
+            if (!isBreathing) {
+                isBreathing = true;
+                const breathCircle = document.getElementById('breathCircle');
+                const breathText = document.getElementById('breathText');
+                
+                breathCircle.classList.add('breathing');
+                
+                let cycleCount = 0;
+                const maxCycles = 2;
+                
+                const phases = [
+                    { text: '吸氣...', duration: 4 },
+                    { text: '屏住...', duration: 4 },
+                    { text: '吐氣...', duration: 4 },
+                    { text: '暫停...', duration: 4 }
+                ];
+                
+                let currentPhase = 0;
+                
+                const updatePhase = () => {
+                    if (cycleCount >= maxCycles) {
+                        breathText.textContent = '練習完成！✅';
+                        breathCircle.classList.remove('breathing');
+                        isBreathing = false;
+                        addXP(25, '🧘 完成呼吸練習');
+                        return;
+                    }
+                    
+                    const phase = phases[currentPhase];
+                    breathText.textContent = phase.text;
+                    
+                    currentPhase++;
+                    if (currentPhase >= phases.length) {
+                        currentPhase = 0;
+                        cycleCount++;
+                    }
+                    
+                    setTimeout(updatePhase, phase.duration * 1000);
+                };
+                
+                updatePhase();
+            }
+        }
+
+        function openThoughtRecord() {
+            document.getElementById('thoughtRecordModal').style.display = 'flex';
+        }
+
+        function closeThoughtRecord() {
+            document.getElementById('thoughtRecordModal').style.display = 'none';
+        }
+
+        function saveThoughtRecord() {
+            const negative = document.getElementById('negativThought').value;
+            const evidence = document.getElementById('evidence').value;
+            const realistic = document.getElementById('realisticThought').value;
+            
+            if (!negative || !evidence || !realistic) {
+                alert('請填寫所有欄位！');
+                return;
+            }
+
+            alert('認知重構記錄已保存！');
+            document.getElementById('negativThought').value = '';
+            document.getElementById('evidence').value = '';
+            document.getElementById('realisticThought').value = '';
+            closeThoughtRecord();
+            addXP(30, '🧠 完成認知重構');
+        }
+
+        function startGrounding() {
+            document.getElementById('groundingModal').style.display = 'flex';
+            const steps = [
+                { title: '看5樣東西', icon: '👀', instruction: '周圍有什麼你能看到的？' },
+                { title: '聽4樣聲音', icon: '👂', instruction: '你能聽到什麼聲音？' },
+                { title: '觸摸3樣物品', icon: '✋', instruction: '摸摸周圍的物品，感受它們的質地' },
+                { title: '聞2樣氣味', icon: '👃', instruction: '你能聞到什麼氣味？' },
+                { title: '嚐1樣味道', icon: '👅', instruction: '喝口水或吃點東西' }
+            ];
+
+            let currentStep = 0;
+            const stepsDiv = document.getElementById('groundingSteps');
+            
+            function showStep() {
+                if (currentStep < steps.length) {
+                    const step = steps[currentStep];
+                    stepsDiv.innerHTML = `
+                        <div style="font-size: 3em; margin-bottom: 10px;">${step.icon}</div>
+                        <h3 style="color: var(--primary); margin-bottom: 10px;">${step.title}</h3>
+                        <p style="font-size: 1.1em; margin-bottom: 20px;">${step.instruction}</p>
+                        <button class="btn btn-success" onclick="nextGroundingStep()" style="width: 100%;">下一步</button>
+                    `;
+                    currentStep++;
+                } else {
+                    stepsDiv.innerHTML = `
+                        <div style="font-size: 2em; margin-bottom: 20px;">✅</div>
+                        <h3 style="color: var(--success);">接地完成！</h3>
+                        <p>你現在應該感到更加放鬆和專注。</p>
+                    `;
+                    addXP(35, '🌿 完成接地技巧');
+                }
+            }
+            
+            window.nextGroundingStep = showStep;
+            showStep();
+        }
+
+        function closeGrounding() {
+            document.getElementById('groundingModal').style.display = 'none';
+        }
+
+        function logEmotion(emoji, label) {
+            const record = {
+                time: new Date().toLocaleString('zh-TW'),
+                emotion: label,
+                emoji: emoji
+            };
+            emotionHistory.push(record);
+            localStorage.setItem('emotionHistory', JSON.stringify(emotionHistory));
+            renderEmotionLog();
+        }
+
+        function renderEmotionLog() {
+            const logDiv = document.getElementById('emotionLog');
+            if (emotionHistory.length === 0) {
+                logDiv.innerHTML = '<p style="color: #999;">尚無情緒記錄</p>';
+                return;
+            }
+            const recent = emotionHistory.slice(-5);
+            logDiv.innerHTML = recent.map((record, idx) => {
+                const actualIndex = emotionHistory.length - 5 + idx;
+                return `<div class="emotion-log" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="flex: 1;">
+                        <span style="font-size: 1.5em; margin-right: 10px;">${record.emoji}</span>
+                        <strong>${record.emotion}</strong> - ${record.time}
+                    </div>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn btn-small btn-danger" onclick="deleteEmotion(${actualIndex})" style="padding: 4px 8px; margin: 0;"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+            }).join('');
+            addXP(15, '📊 記錄情緒');
+        }
+
+        function deleteEmotion(index) {
+            if (confirm('確定要刪除這條情緒記錄嗎？')) {
+                emotionHistory.splice(index, 1);
+                localStorage.setItem('emotionHistory', JSON.stringify(emotionHistory));
+                renderEmotionLog();
+            }
+        }
+
+        function updateStats() {
+            const today = new Date().toDateString();
+            if (stats.lastDate !== today) {
+                stats.streak = (stats.lastDate === new Date(Date.now() - 86400000).toDateString()) ? stats.streak + 1 : 1;
+                stats.lastDate = today;
+            }
+            
+            document.getElementById('streak').textContent = stats.streak;
+            document.getElementById('totalMinutes').textContent = stats.totalMinutes;
+            
+            if (document.getElementById('levelDisplay')) {
+                document.getElementById('levelDisplay').textContent = `Lv.${stats.level}`;
+                document.getElementById('xpDisplay').textContent = `${stats.xp} XP`;
+            }
+            
+            localStorage.setItem('stats', JSON.stringify(stats));
+        }
+
+        function addXP(amount, reason) {
+            stats.xp += amount;
+            const xpPerLevel = 500;
+            
+            while (stats.xp >= xpPerLevel) {
+                stats.xp -= xpPerLevel;
+                stats.level++;
+                showLevelUpAnimation();
+            }
+            
+            updateStats();
+        }
+
+        function showLevelUpAnimation() {
+            const div = document.createElement('div');
+            div.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);
+                color: white;
+                padding: 40px;
+                border-radius: 15px;
+                font-size: 2em;
+                font-weight: bold;
+                z-index: 10000;
+                text-align: center;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            `;
+            div.innerHTML = `🎉 升級到 Lv.${stats.level}！`;
+            document.body.appendChild(div);
+            
+            setTimeout(() => div.remove(), 2000);
+        }
+
+        function renderQuizHistory() {
+            const historyDiv = document.getElementById('quizHistory');
+            if (quizHistory.length === 0) {
+                historyDiv.innerHTML = '<p style="text-align: center; color: #999;">暫無測驗記錄</p>';
+                return;
+            }
+
+            historyDiv.innerHTML = quizHistory.map((record, idx) => {
+                let level = '輕微傾向';
+                if (record.score >= 15 && record.score < 25) level = '中等傾向';
+                else if (record.score >= 25 && record.score < 35) level = '較明顯傾向';
+                else if (record.score >= 35) level = '嚴重傾向';
+
+                return `
+                    <div style="background: white; padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center;">
+                        <div style="flex: 1;">
+                            <strong>${record.date}</strong>
+                            <div style="color: #666; font-size: 0.9em;">分數: ${record.score}/50 - ${level}</div>
+                        </div>
+                        <button class="btn btn-small btn-danger" onclick="deleteQuizRecord(${idx})" style="margin: 0;"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteQuizRecord(index) {
+            if (confirm('確定要刪除這筆測驗記錄嗎？')) {
+                quizHistory.splice(index, 1);
+                localStorage.setItem('quizHistory', JSON.stringify(quizHistory));
+                renderQuizHistory();
+            }
+        }
+
+        function sendReportToEmail() {
+            const userEmail = document.getElementById('userEmail').value.trim();
+            const emailStatus = document.getElementById('emailStatus');
+            
+            if (!userEmail || !userEmail.includes('@')) {
+                emailStatus.innerHTML = '<span style="color: #e74c3c;"><i class="fas fa-times"></i> 請輸入有效的 Email 地址</span>';
+                return;
+            }
+
+            const completedTasks = tasks.filter(t => t.completed).length;
+            const totalTasks = tasks.length;
+            const taskProgress = totalTasks > 0 ? Math.round(completedTasks / totalTasks * 100) : 0;
+            
+            const report = {
+                timestamp: new Date().toLocaleString('zh-TW'),
+                email: userEmail,
+                userStats: {
+                    level: stats.level,
+                    xp: stats.xp,
+                    streak: stats.streak,
+                    totalMinutes: stats.totalMinutes
+                },
+                tasks: {
+                    completed: completedTasks,
+                    total: totalTasks,
+                    percentage: taskProgress,
+                    list: tasks.map(t => ({ text: t.text, completed: t.completed }))
+                },
+                emotions: emotionHistory.slice(-10),
+                quizHistory: quizHistory,
+                currentEnergy: currentEnergy
+            };
+
+            const reportText = `ADHD Focus Helper Pro Max - 進度報告
+==============================
+生成時間: ${report.timestamp}
+Email: ${userEmail}
+
+【使用者統計】
+等級: Lv.${report.userStats.level}
+經驗值 (XP): ${report.userStats.xp}
+連續使用天數: ${report.userStats.streak}
+專注總分鐘數: ${report.userStats.totalMinutes}
+
+【任務進度】
+完成: ${report.tasks.completed}/${report.tasks.total} (${report.tasks.percentage}%)
+${report.tasks.list.map(t => `- ${t.completed ? '✅' : '⭕'} ${t.text}`).join('\n')}
+
+【最近情緒記錄】
+${report.emotions.length > 0 ? report.emotions.map(e => `${e.emoji} ${e.emotion} (${e.time})`).join('\n') : '暫無記錄'}
+
+【測驗歷史】
+${report.quizHistory.length > 0 ? report.quizHistory.map(h => `${h.date} - 分數: ${h.score}/50`).join('\n') : '暫無記錄'}
+
+【當前精力水平】
+${['🔴 低', '🟠 略低', '🟡 中等', '🟢 高', '🟢 超高'][report.currentEnergy - 1]} (${report.currentEnergy}/5)`;
+
+            const subject = encodeURIComponent(`ADHD Focus Helper - 進度報告 ${new Date().toLocaleDateString('zh-TW')}`);
+            const body = encodeURIComponent(reportText);
+            const mailtoLink = `mailto:${userEmail}?subject=${subject}&body=${body}`;
+            
+            navigator.clipboard.writeText(reportText).then(() => {
+                emailStatus.innerHTML = '<span style="color: #2ecc71;"><i class="fas fa-check"></i> 報告已複製到剪貼板！正在開啟郵件應用程式...</span>';
+                
+                setTimeout(() => {
+                    window.location.href = mailtoLink;
+                }, 800);
+                
+                setTimeout(() => {
+                    emailStatus.innerHTML = '<span style="color: #2ecc71;"><i class="fas fa-check"></i> 報告已生成！請在郵件中粘貼或手動發送。</span>';
+                    document.getElementById('userEmail').value = '';
+                }, 2000);
+            }).catch(() => {
+                emailStatus.innerHTML = '<span style="color: #f39c12;"><i class="fas fa-info-circle"></i> 無法複製到剪貼板，請手動複製下方內容</span>';
+                alert(reportText);
+                document.getElementById('userEmail').value = '';
+            });
+        }
+
+        document.getElementById('timerMinutes')?.addEventListener('input', (e) => {
+            const minutes = parseInt(e.target.value);
+            document.getElementById('timerMinutesDisplay').textContent = minutes;
+            timerDuration = minutes * 60;
+            timeLeft = timerDuration;
+            updateTimerDisplay();
+        });
+
+        function initializeApp() {
+            currentEnergy = parseInt(localStorage.getItem('currentEnergy')) || 3;
+            if (hasCompletedQuiz) {
+                document.getElementById('quiz').classList.add('hidden');
+                document.getElementById('plan').classList.remove('hidden');
+                loadTasks();
+                updateProgress();
+                renderQuizHistory();
+                renderEnergyLevel();
+                renderRoutines();
+                renderEmotionLog();
+                updateStats();
+            }
+        }
+
+        if (!stats.level) {
+            stats.level = 1;
+            stats.xp = 0;
+        }
+
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function playSound(type, volume) {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const ctx = audioContext;
+            const gainNode = ctx.createGain();
+            gainNode.gain.value = volume / 100;
+            gainNode.connect(ctx.destination);
+
+            const duration = 0.5;
+            const now = ctx.currentTime;
+
+            if (type === 'bell') {
+                const osc1 = ctx.createOscillator();
+                const osc2 = ctx.createOscillator();
+                osc1.frequency.value = 800;
+                osc2.frequency.value = 600;
+                osc1.connect(gainNode);
+                osc2.connect(gainNode);
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + duration);
+                osc2.stop(now + duration);
+            } else if (type === 'chime') {
+                const osc = ctx.createOscillator();
+                osc.frequency.setValueAtTime(1000, now);
+                osc.frequency.exponentialRampToValueAtTime(400, now + duration);
+                osc.connect(gainNode);
+                osc.start(now);
+                osc.stop(now + duration);
+            } else if (type === 'alert') {
+                const osc = ctx.createOscillator();
+                osc.frequency.setValueAtTime(700, now);
+                osc.frequency.setValueAtTime(900, now + duration / 2);
+                osc.frequency.setValueAtTime(700, now + duration);
+                osc.connect(gainNode);
+                osc.start(now);
+                osc.stop(now + duration);
+            } else if (type === 'digital') {
+                const osc = ctx.createOscillator();
+                osc.frequency.setValueAtTime(1200, now);
+                osc.frequency.setValueAtTime(1000, now + duration / 3);
+                osc.frequency.setValueAtTime(1200, now + 2 * duration / 3);
+                osc.connect(gainNode);
+                osc.start(now);
+                osc.stop(now + duration);
+            }
+        }
+
+        function testTimerSound() {
+            if (timerSoundEnabled) {
+                playSound(timerSoundType, timerVolume);
+            }
+        }
+
+        function toggleTimerSound() {
+            timerSoundEnabled = !timerSoundEnabled;
+            localStorage.setItem('timerSoundEnabled', timerSoundEnabled);
+            const btn = document.getElementById('timerSoundToggle');
+            const status = document.getElementById('timerSoundStatus');
+            if (timerSoundEnabled) {
+                btn.style.background = 'var(--success)';
+                status.textContent = '開啟';
+            } else {
+                btn.style.background = '#999';
+                status.textContent = '關閉';
+            }
+        }
+
+        function initializeSoundSettings() {
+            document.getElementById('timerVolume')?.addEventListener('input', (e) => {
+                timerVolume = parseInt(e.target.value);
+                document.getElementById('timerVolumeDisplay').textContent = timerVolume + '%';
+                localStorage.setItem('timerVolume', timerVolume);
+            });
+
+            document.getElementById('timerSoundType')?.addEventListener('change', (e) => {
+                timerSoundType = e.target.value;
+                localStorage.setItem('timerSoundType', timerSoundType);
+            });
+
+            if (timerSoundEnabled) {
+                document.getElementById('timerSoundToggle').style.background = 'var(--success)';
+            } else {
+                document.getElementById('timerSoundToggle').style.background = '#999';
+            }
+        }
+
+        updateStats();
+        initializeApp();
+        initializeSoundSettings();
+    </script>
+</body>
+</html>
