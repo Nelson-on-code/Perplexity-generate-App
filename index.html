@@ -7,91 +7,209 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #4a90e2;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
+            --primary: #1a0033;
+            --accent: #FF8C00;
+            --accent-light: #8A2BE2;
+            --success: #FFD700;
+            --text: #E8E8E8;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #2d0052 50%, var(--primary) 100%);
             min-height: 100vh;
             padding: 20px;
-            color: var(--dark);
+            padding-top: 80px;
+            color: var(--text);
             display: flex;
             flex-direction: column;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        body.theme-1 {
+            --primary: #1a0033;
+            --accent: #FF8C00;
+            --accent-light: #8A2BE2;
+            --success: #FFD700;
+            --text: #E8E8E8;
+            background: linear-gradient(135deg, #1a0033 0%, #2d0052 50%, #1a0033 100%);
+        }
+
+        
+
+        body.theme-3 {
+            --primary: #D3D3D3;
+            --accent: #FF9940;
+            --accent-light: #003D6B;
+            --success: #FF9940;
+            --text: #1A1A1A;
+            background: 
+                repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0, 0, 0, 0.02) 3px, rgba(0, 0, 0, 0.02) 6px),
+                repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(255, 255, 255, 0.08) 3px, rgba(255, 255, 255, 0.08) 6px),
+                linear-gradient(135deg, #E8E8E8 0%, #C0C0C0 25%, #E0E0E0 50%, #C0C0C0 75%, #E8E8E8 100%);
+            background-attachment: fixed;
+        }
+
+        body.theme-4 {
+            --primary: #6F8F4F;
+            --accent: #C47A3A;
+            --accent-light: #B08D57;
+            --success: #C47A3A;
+            --text: #F7F3E8;
+            --border-neutral: #E6E6E6;
+            --dark-support: #8A5A3B;
+            --main-bg: #F7F3E8;
+            background: 
+                repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(138, 90, 59, 0.04) 4px, rgba(138, 90, 59, 0.04) 8px),
+                repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(255, 255, 255, 0.03) 4px, rgba(255, 255, 255, 0.03) 8px),
+                linear-gradient(135deg, #F7F3E8 0%, #F0EBE0 50%, #F7F3E8 100%);
+            background-attachment: fixed;
+        }
+
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            z-index: 1002;
+            background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.95);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            height: 44px;
+        }
+
+        .control-btn {
+            padding: 6px 10px;
+            border: none;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--accent);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            -webkit-user-select: none;
+            user-select: none;
+            white-space: nowrap;
+            height: 30px;
+        }
+
+        .control-btn:hover {
+            background: var(--accent);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .control-btn.active {
+            background: var(--accent);
+            color: var(--primary);
+            box-shadow: 0 0 10px rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.5);
+        }
+
+        .control-btn i {
+            font-size: 1em;
+        }
+
+        .control-btn span {
+            font-size: 0.85em;
+            margin-left: 2px;
+        }
+
+        .control-separator {
+            width: 1px;
+            height: 16px;
+            background: var(--accent);
+            opacity: 0.3;
         }
 
         .language-toggle {
             position: fixed;
             top: 20px;
-            left: 20px;
-            background: white;
-            border: 2px solid var(--primary);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.95);
+            border: 2px solid var(--accent);
             border-radius: 8px;
             padding: 0;
             z-index: 1001;
             display: flex;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            height: 44px;
         }
 
         .lang-btn {
             padding: 10px 16px;
             border: none;
-            background: white;
-            color: var(--primary);
+            background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.95);
+            color: var(--accent);
             cursor: pointer;
             font-weight: 600;
             font-size: 0.95em;
             transition: all 0.3s;
             border-radius: 6px;
             margin: 2px;
+            display: flex;
+            align-items: center;
         }
 
         .lang-btn.active {
-            background: var(--primary);
-            color: white;
+            background: var(--accent);
+            color: var(--primary);
         }
 
         .lang-btn:hover {
-            background: var(--primary);
-            color: white;
+            background: var(--accent);
+            color: var(--primary);
         }
 
         .container { max-width: 800px; margin: 0 auto; flex: 1; }
 
         header {
             text-align: center;
-            color: white;
+            color: var(--accent);
             margin-bottom: 30px;
         }
 
         header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 0 0 20px rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.3);
+            color: var(--accent);
+            transition: all 0.3s ease;
         }
 
-        header p { font-size: 1.1em; opacity: 0.9; }
+        header p { 
+            font-size: 1.1em; 
+            opacity: 0.9; 
+            color: var(--text);
+            transition: color 0.3s ease;
+        }
 
         .level-badge {
             position: fixed;
-            top: 20px;
+            top: 25px;
             right: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--accent-light), rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.8));
+            color: var(--text);
             padding: 15px 20px;
             border-radius: 10px;
             font-weight: bold;
             z-index: 999;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             font-size: 0.9em;
             animation: levelBadgeEntry 2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
         }
 
         @keyframes levelBadgeEntry {
@@ -114,22 +232,23 @@
             right: 20px;
             top: 50%;
             transform: translateY(-50%);
-            background: white;
+            background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.9);
             padding: 10px;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             z-index: 998;
             display: flex;
             flex-direction: column;
             gap: 5px;
+            transition: background 0.3s ease;
         }
 
         .nav-scroll-btn {
             width: 40px;
             height: 40px;
             border: none;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--accent), rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.8));
+            color: var(--primary);
             border-radius: 8px;
             cursor: pointer;
             font-size: 1.2em;
@@ -143,30 +262,34 @@
         }
 
         .nav-scroll-btn:active { transform: scale(0.95); }
-        .nav-scroll-btn:hover { transform: scale(1.1); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .nav-scroll-btn:hover { transform: scale(1.1); box-shadow: 0 4px 15px rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.4); }
 
         .nav-scroll-label {
             position: absolute;
             right: 50px;
-            background: #2c3e50;
-            color: white;
+            background: var(--accent);
+            color: var(--primary);
             padding: 8px 12px;
             border-radius: 6px;
             font-size: 0.85em;
             white-space: nowrap;
             display: none;
             z-index: 999;
+            font-weight: 600;
         }
 
         .nav-scroll-btn:hover .nav-scroll-label { display: block; }
 
         .section {
-            background: white;
+            background: linear-gradient(135deg, rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.8), rgba(45, 0, 82, 0.8));
             padding: 30px;
             margin: 20px 0;
             border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             animation: slideIn 0.5s ease;
+            border-left: 4px solid var(--accent);
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease;
         }
 
         @keyframes slideIn {
@@ -174,12 +297,33 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h2 { color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        h3 { color: var(--dark); margin-top: 20px; margin-bottom: 15px; }
+        h2 { 
+            color: var(--accent); 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            text-shadow: 0 0 10px rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.2);
+            transition: color 0.3s ease;
+        }
+        
+        h3 { 
+            color: var(--accent); 
+            margin-top: 20px; 
+            margin-bottom: 15px; 
+            text-shadow: 0 0 10px rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.2);
+            transition: color 0.3s ease;
+        }
+
+        h4 {
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.2);
+            transition: color 0.3s ease;
+        }
 
         .btn {
-            background: var(--primary);
-            color: white;
+            background: linear-gradient(135deg, var(--accent), rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.9));
+            color: var(--primary);
             border: none;
             padding: 12px 24px;
             border-radius: 8px;
@@ -191,100 +335,511 @@
             -webkit-user-select: none;
             user-select: none;
             touch-action: manipulation;
+            font-weight: 600;
         }
 
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(74,144,226,0.4); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.4); }
         .btn:active { transform: translateY(0px); }
-        .btn-success { background: var(--success); }
-        .btn-success:hover { box-shadow: 0 5px 15px rgba(46,204,113,0.4); }
-        .btn-danger { background: var(--danger); }
-        .btn-danger:hover { box-shadow: 0 5px 15px rgba(231,76,60,0.4); }
+        .btn-success { background: linear-gradient(135deg, var(--success), rgba(var(--success-rgb, 255), var(--success-grb, 215), var(--success-brg, 0), 0.9)); color: var(--primary); }
+        .btn-success:hover { box-shadow: 0 5px 20px rgba(var(--success-rgb, 255), var(--success-grb, 215), var(--success-brg, 0), 0.4); }
+        .btn-danger { background: linear-gradient(135deg, var(--accent-light), rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.9)); color: var(--text); }
+        .btn-danger:hover { box-shadow: 0 5px 20px rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.4); }
         .btn-small { padding: 8px 16px; font-size: 0.9em; }
 
-        .question-group { background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 8px; border-left: 4px solid var(--primary); }
-        .question-group label { display: block; margin: 10px 0; font-weight: 500; }
+        .question-group { 
+            background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2); 
+            padding: 15px; 
+            margin: 15px 0; 
+            border-radius: 8px; 
+            border-left: 4px solid var(--accent-light);
+            transition: background 0.3s ease;
+        }
+        
+        .question-group label { display: block; margin: 10px 0; font-weight: 500; color: var(--text); transition: color 0.3s ease; }
 
-        .tip { background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%); padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid var(--warning); display: flex; gap: 10px; }
-        .tip i { color: var(--warning); font-size: 1.3em; flex-shrink: 0; }
+        .tip { 
+            background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2); 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 15px 0; 
+            border-left: 4px solid var(--accent-light); 
+            display: flex; 
+            gap: 10px; 
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+        
+        .tip i { color: var(--accent-light); font-size: 1.3em; flex-shrink: 0; }
 
-        .score-card { background: linear-gradient(135deg, var(--primary) 0%, #357abd 100%); color: white; padding: 25px; border-radius: 12px; text-align: center; margin: 20px 0; }
-        .score-card .number { font-size: 3em; font-weight: bold; margin: 10px 0; }
+        .score-card { 
+            background: linear-gradient(135deg, var(--accent-light), rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.8)); 
+            color: var(--text); 
+            padding: 25px; 
+            border-radius: 12px; 
+            text-align: center; 
+            margin: 20px 0; 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .score-card .number { font-size: 3em; font-weight: bold; margin: 10px 0; color: var(--success); }
         .score-card .level { font-size: 1.3em; opacity: 0.9; }
 
         .task-list { list-style: none; }
-        .task-item { background: #f8f9fa; padding: 15px; margin: 12px 0; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); transition: all 0.3s; }
-        .task-item.completed { background: #d4edda; opacity: 0.7; border-left-color: var(--success); }
+        
+        .task-item { 
+            background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.1); 
+            padding: 15px; 
+            margin: 12px 0; 
+            border-radius: 8px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-left: 4px solid var(--accent); 
+            transition: all 0.3s; 
+            color: var(--text);
+        }
+        
+        .task-item.completed { 
+            background: rgba(var(--success-rgb, 255), var(--success-grb, 215), var(--success-brg, 0), 0.15); 
+            opacity: 0.7; 
+            border-left-color: var(--success); 
+        }
+        
         .task-item.completed span { text-decoration: line-through; }
-        .task-item:hover { transform: translateX(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .task-item:hover { transform: translateX(5px); box-shadow: 0 2px 10px rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.2); }
         .task-actions { display: flex; gap: 8px; }
 
-        #timer { text-align: center; font-size: 5em; font-weight: bold; color: var(--primary); margin: 30px 0; font-family: 'Courier New', monospace; animation: pulse 1s infinite; }
+        #timer { 
+            text-align: center; 
+            font-size: 5em; 
+            font-weight: bold; 
+            color: var(--accent); 
+            margin: 30px 0; 
+            font-family: 'Courier New', monospace; 
+            animation: pulse 1s infinite; 
+            text-shadow: 0 0 20px rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.3);
+            transition: color 0.3s ease;
+        }
+        
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 
-        .timer-display { text-align: center; }
+        .timer-display { 
+            text-align: center; 
+            background: linear-gradient(135deg, rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2), rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.15));
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid var(--accent-light);
+            transition: all 0.3s ease;
+        }
 
-        #progress { width: 100%; height: 30px; background: #e0e0e0; border-radius: 15px; overflow: hidden; margin: 20px 0; }
-        .bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--success)); width: 0%; transition: width 0.5s ease; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9em; }
+        #progress { 
+            width: 100%; 
+            height: 30px; 
+            background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2); 
+            border-radius: 15px; 
+            overflow: hidden; 
+            margin: 20px 0; 
+        }
+        
+        .bar { 
+            height: 100%; 
+            background: linear-gradient(90deg, var(--accent), var(--success)); 
+            width: 0%; 
+            transition: width 0.5s ease; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: var(--primary); 
+            font-weight: bold; 
+            font-size: 0.9em; 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
 
-        .progress-summary { background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%); padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; }
-        .progress-summary .percentage { font-size: 2em; color: var(--success); font-weight: bold; }
+        .progress-summary { 
+            background: linear-gradient(135deg, rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2), rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.15)); 
+            padding: 20px; 
+            border-radius: 8px; 
+            text-align: center; 
+            margin: 20px 0; 
+            border: 2px solid var(--accent-light);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+        
+        .progress-summary .percentage { 
+            font-size: 2em; 
+            color: var(--success); 
+            font-weight: bold; 
+        }
 
         .input-group { display: flex; gap: 10px; margin: 20px 0; }
-        input[type="text"], input[type="email"] { flex: 1; padding: 12px; border: 2px solid var(--light); border-radius: 8px; font-size: 16px; transition: border-color 0.3s; }
-        input[type="text"]:focus, input[type="email"]:focus { outline: none; border-color: var(--primary); }
+        
+        input[type="text"], input[type="email"], select { 
+            flex: 1; 
+            padding: 12px; 
+            border: 2px solid var(--accent); 
+            border-radius: 8px; 
+            font-size: 16px; 
+            transition: border-color 0.3s;
+            background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.8);
+            color: var(--text);
+        }
+        
+        input[type="text"]:focus, input[type="email"]:focus, select:focus { 
+            outline: none; 
+            border-color: var(--accent-light); 
+            box-shadow: 0 0 10px rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.3);
+        }
 
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 20px 0; }
-        .stat-card { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 20px; border-radius: 10px; text-align: center; }
-        .stat-card .value { font-size: 2em; font-weight: bold; color: var(--primary); }
-        .stat-card .label { color: var(--dark); margin-top: 5px; font-size: 0.9em; }
+        
+        .stat-card { 
+            background: linear-gradient(135deg, rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2), rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.15)); 
+            padding: 20px; 
+            border-radius: 10px; 
+            text-align: center; 
+            border: 2px solid var(--accent-light);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card .value { 
+            font-size: 2em; 
+            font-weight: bold; 
+            color: var(--success); 
+        }
+        
+        .stat-card .label { 
+            color: var(--text); 
+            margin-top: 5px; 
+            font-size: 0.9em; 
+        }
 
-        .mindfulness-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 12px; margin: 20px 0; }
+        .mindfulness-section { 
+            background: linear-gradient(135deg, var(--accent-light), rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.8)); 
+            color: var(--text); 
+            padding: 25px; 
+            border-radius: 12px; 
+            margin: 20px 0; 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
 
-        .breath-circle { width: 150px; height: 150px; border-radius: 50%; background: rgba(255,255,255,0.3); margin: 20px auto; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: all 0.3s; user-select: none; }
-        .breath-circle:hover { background: rgba(255,255,255,0.5); transform: scale(1.05); }
-        @keyframes breathPulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.7); } 50% { transform: scale(1.15); box-shadow: 0 0 0 10px rgba(255,255,255,0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0); } }
+        .mindfulness-section h3 {
+            color: var(--text);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .mindfulness-section h4 {
+            color: var(--text);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .breath-circle { 
+            width: 150px; 
+            height: 150px; 
+            border-radius: 50%; 
+            background: rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.2); 
+            margin: 20px auto; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            user-select: none; 
+            color: var(--text);
+        }
+        
+        .breath-circle:hover { background: rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.4); transform: scale(1.05); }
+        
+        @keyframes breathPulse { 
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.7); } 
+            50% { transform: scale(1.15); box-shadow: 0 0 0 10px rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0); } 
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0); } 
+        }
+        
         .breath-circle.breathing { animation: breathPulse 4s infinite; }
 
         .hidden { display: none; }
-        .success-message { background: #d4edda; border-left: 4px solid var(--success); padding: 15px; border-radius: 8px; color: #155724; margin: 15px 0; }
+        
+        .success-message { 
+            background: rgba(var(--success-rgb, 255), var(--success-grb, 215), var(--success-brg, 0), 0.2); 
+            border-left: 4px solid var(--success); 
+            padding: 15px; 
+            border-radius: 8px; 
+            color: var(--text); 
+            margin: 15px 0; 
+            transition: all 0.3s ease;
+        }
 
         .energy-indicator { display: flex; gap: 5px; margin: 10px 0; }
-        .energy-bar { flex: 1; height: 10px; border-radius: 5px; background: #e0e0e0; cursor: pointer; transition: all 0.3s; }
-        .energy-bar.active { background: linear-gradient(to right, #2ecc71, #f39c12); box-shadow: 0 0 10px rgba(46,204,113,0.4); }
+        
+        .energy-bar { 
+            flex: 1; 
+            height: 10px; 
+            border-radius: 5px; 
+            background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.3); 
+            cursor: pointer; 
+            transition: all 0.3s; 
+        }
+        
+        .energy-bar.active { 
+            background: linear-gradient(to right, var(--accent), var(--success)); 
+            box-shadow: 0 0 10px rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.4); 
+        }
 
-        .emotion-log { background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; }
-        .info-text { font-size: 0.85em; color: #666; margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 6px; border-left: 3px solid var(--warning); }
+        .emotion-log { 
+            background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2); 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 10px 0; 
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+        
+        .info-text { 
+            font-size: 0.85em; 
+            color: var(--text); 
+            margin-top: 10px; 
+            padding: 10px; 
+            background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2); 
+            border-radius: 6px; 
+            border-left: 3px solid var(--accent); 
+            transition: all 0.3s ease;
+        }
 
-        footer { background: transparent; text-align: center; padding: 30px 20px 20px; color: rgba(255,255,255,0.7); font-size: 0.75em; line-height: 1.6; margin-top: 20px; }
-        footer a { color: rgba(255,255,255,0.9); text-decoration: none; transition: color 0.3s; }
-        footer a:hover { color: white; }
+        footer { 
+            background: transparent; 
+            text-align: center; 
+            padding: 30px 20px 20px; 
+            color: rgba(var(--text-rgb, 232), var(--text-grb, 232), var(--text-brg, 232), 0.5); 
+            font-size: 0.75em; 
+            line-height: 1.6; 
+            margin-top: 20px; 
+            transition: color 0.3s ease;
+        }
+        
+        footer a { 
+            color: var(--accent); 
+            text-decoration: none; 
+            transition: color 0.3s; 
+        }
+        
+        footer a:hover { color: var(--success); }
 
         .routine-item-edit { display: flex; gap: 5px; margin-top: 8px; }
-        .routine-item-edit input { flex: 1; padding: 6px; border: 1px solid var(--primary); border-radius: 4px; font-size: 0.9em; }
+        
+        .routine-item-edit input { 
+            flex: 1; 
+            padding: 6px; 
+            border: 1px solid var(--accent); 
+            border-radius: 4px; 
+            font-size: 0.9em; 
+            background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.8);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+        
         .routine-item-edit button { padding: 4px 8px; font-size: 0.8em; margin: 0; }
 
-        .edit-routine-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .edit-routine-content { background: white; padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .edit-routine-modal { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0, 0, 0, 0.7); 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 1000; 
+        }
+        
+        .edit-routine-content { 
+            background: linear-gradient(135deg, var(--primary), rgba(45, 0, 82, 0.8)); 
+            padding: 30px; 
+            border-radius: 15px; 
+            max-width: 600px; 
+            width: 90%; 
+            max-height: 90vh; 
+            overflow-y: auto; 
+            border: 2px solid var(--accent);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .task-management-section {
+            background: linear-gradient(135deg, rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2), rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.15));
+            border: 2px solid var(--accent-light);
+            transition: all 0.3s ease;
+        }
+
+        .timer-section {
+            background: linear-gradient(135deg, rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2), rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.15));
+            border: 2px solid var(--accent-light);
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .emotion-section {
+            background: linear-gradient(135deg, rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.8), rgba(45, 0, 82, 0.8));
+            border: 2px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .energy-hint {
+            font-size: 0.85em;
+            color: var(--text);
+            opacity: 0.8;
+            margin-top: 8px;
+            font-style: italic;
+            transition: color 0.3s ease;
+        }
+
+        .decompose-btn {
+            background: linear-gradient(135deg, var(--accent-light), rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.8));
+            color: var(--text);
+        }
+
+        .decompose-btn:hover {
+            box-shadow: 0 5px 20px rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.4);
+        }
+
+        /* 晨夜行程容器 */
+        .morning-routine-container {
+            background: linear-gradient(135deg, var(--morning-accent) 0%, var(--morning-accent-light) 100%);
+            color: var(--primary);
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .morning-routine-container #morningTitle {
+            color: #FFFFFF;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .evening-routine-container {
+            background: linear-gradient(135deg, var(--evening-accent) 0%, var(--evening-accent-light) 100%);
+            color: var(--text);
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .evening-routine-container #eveningTitle {
+            color: #FFFFFF;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 配色一 (衝刺) */
+        body.theme-1 .morning-routine-container {
+            --morning-accent: #FF8C00;
+            --morning-accent-light: #FFB84D;
+        }
+
+        body.theme-1 .evening-routine-container {
+            --evening-accent: #8A2BE2;
+            --evening-accent-light: #5A0BA2;
+        }
+
+        
+        
+
+        
+
+        /* 配色三 (iPhone 17 Pro) */
+        body.theme-3 .morning-routine-container {
+            --morning-accent: #FF6B00;
+            --morning-accent-light: #FF8C33;
+            color: #1a1a1a;
+        }
+
+        body.theme-3 .morning-routine-container #morningTitle {
+            color: #FFFFFF;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        body.theme-3 .evening-routine-container {
+            --evening-accent: #1a3a4d;
+            --evening-accent-light: #1a3a4d;
+            color: #FFFFFF;
+        }
+
+        body.theme-3 .evening-routine-container #eveningTitle {
+            color: #FFFFFF;
+        }
+
+        /* 配色四 (生態綠) */
+        body.theme-4 .morning-routine-container {
+            --morning-accent: #C47A3A;
+            --morning-accent-light: #D99A5A;
+            color: #1a1a1a;
+        }
+
+        body.theme-4 .morning-routine-container #morningTitle {
+            color: #FFFFFF;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        body.theme-4 .evening-routine-container {
+            --evening-accent: #B08D57;
+            --evening-accent-light: #8A5A3B;
+            color: #FFFFFF;
+        }
+
+        body.theme-4 .evening-routine-container #eveningTitle {
+            color: #FFFFFF;
+        }
 
         @media (max-width: 600px) {
+            body {
+                padding-top: 120px;
+            }
+
+            .control-panel {
+                width: calc(100% - 40px);
+                left: 20px;
+                right: 20px;
+                top: 80px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
             header h1 { font-size: 1.8em; }
             #timer { font-size: 3em; }
             .section { padding: 20px; }
-            .language-toggle { left: 10px; padding: 2px; }
-            .lang-btn { padding: 8px 12px; font-size: 0.85em; }
             footer { font-size: 0.7em; }
         }
     </style>
 </head>
-<body>
-    <!-- Language Toggle -->
+<body class="theme-1">
+    <!-- Control Panel - 四配色選擇 -->
+    <div class="control-panel">
+        <button class="control-btn active" id="themeBtn1" onclick="switchTheme(1); event.preventDefault(); return false;" title="衝刺配色">
+            ⚡
+        </button>
+        
+        <button class="control-btn" id="themeBtn3" onclick="switchTheme(3); event.preventDefault(); return false;" title="iPhone 17 Pro 配色">
+            🍎 <span>17 Pro</span>
+        </button>
+        <button class="control-btn" id="themeBtn4" onclick="switchTheme(4); event.preventDefault(); return false;" title="生態綠配色">
+            🌳
+        </button>
+        <div class="control-separator"></div>
+    </div>
+
+    <!-- Language Toggle - Fixed at top center -->
     <div class="language-toggle">
         <button class="lang-btn active" id="zhBtn" onclick="switchLanguage('zh')">中文</button>
         <button class="lang-btn" id="enBtn" onclick="switchLanguage('en')">English</button>
     </div>
 
     <div class="container">
-        <header>
+        
             <h1><i class="fas fa-brain"></i> ADHD Focus Helper Pro Max</h1>
             <p id="appSubtitle" data-zh="基於CBT的焦點訓練 • 習慣養成 • 進度追蹤" data-en="CBT-based Focus Training • Habit Building • Progress Tracking">基於CBT的焦點訓練 • 習慣養成 • 進度追蹤</p>
             <div class="level-badge"><i class="fas fa-gamepad"></i> <span id="levelDisplay">Lv.1</span> | <span id="xpDisplay">0 XP</span></div>
@@ -293,7 +848,7 @@
         <!-- Quiz Section -->
         <div id="quiz" class="section">
             <h2><i class="fas fa-clipboard-list"></i> <span id="quizTitle" data-zh="ADHD快速評估" data-en="ADHD Quick Assessment">ADHD快速評估</span></h2>
-            <p id="quizDesc" style="margin-bottom: 20px;" data-zh="回答10個問題 (1=從不, 5=總是)，瞭解你的專注力狀態" data-en="Answer 10 questions (1=Never, 5=Always) to understand your focus status">回答10個問題 (1=從不, 5=總是)，瞭解你的專注力狀態</p>
+            <p id="quizDesc" style="margin-bottom: 20px; color: var(--text);" data-zh="回答10個問題 (1=從不, 5=總是)，瞭解你的專注力狀態" data-en="Answer 10 questions (1=Never, 5=Always) to understand your focus status">回答10個問題 (1=從不, 5=總是)，瞭解你的專注力狀態</p>
             <div id="questions"></div>
             <button class="btn" id="startQuizBtn" onclick="startQuiz(); event.preventDefault(); return false;"><i class="fas fa-play"></i> <span id="startQuizText" data-zh="開始評估" data-en="Start Assessment">開始評估</span></button>
             <button class="btn btn-success hidden" id="submitQuiz" onclick="generatePlan(); event.preventDefault(); return false;"><i class="fas fa-check"></i> <span id="submitQuizText" data-zh="生成個人計劃" data-en="Generate Personal Plan">生成個人計劃</span></button>
@@ -310,28 +865,29 @@
             </div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
-                <h3 style="margin: 0;"><i class="fas fa-lightbulb"></i> <span id="tipsTitle" data-zh="今日練習重點" data-en="Today's Practice Focus">今日練習重點</span></h3>
+                <h3 id="tipsTitle" style="margin: 0;" data-zh="今日練習重點" data-en="Today's Practice Focus">今日練習重點</h3>
                 <button class="btn btn-success" onclick="retakeQuiz()" style="margin: 0;"><i class="fas fa-redo"></i> <span id="retakeText" data-zh="重新測驗" data-en="Retake Quiz">重新測驗</span></button>
             </div>
             <div id="dailyTips"></div>
 
             <!-- Energy Level & Task Difficulty -->
             <h3 id="energySection" data-zh="自我檢測當前精力水平" data-en="Check Your Current Energy Level">自我檢測當前精力水平</h3>
+            <div class="energy-hint" id="energyHint" data-zh="點選目前狀態等級以取得建議" data-en="Click your current energy level for suggestions">點選目前狀態等級以取得建議</div>
             <div class="energy-indicator" id="energyLevel"></div>
-            <p id="energyNote" style="color: #666; font-size: 0.9em; margin-top: 10px;" data-zh="根據你的精力水平，推薦以下任務難度：" data-en="Based on your energy level, recommended task difficulty:">根據你的精力水平，推薦以下任務難度：</p>
-            <div id="taskRecommendation" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0;"></div>
+            <p id="energyNote" style="color: var(--text); font-size: 0.9em; margin-top: 10px;" data-zh="根據你的精力水平，推薦以下任務難度：" data-en="Based on your energy level, recommended task difficulty:">根據你的精力水平，推薦以下任務難度：</p>
+            <div id="taskRecommendation" style="background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2); padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid var(--accent-light); color: var(--text);"></div>
 
             <!-- Morning & Evening Routines -->
-            <h3 id="routineSection" data-zh="推薦例行程序" data-en="Recommended Routines">推薦例行程序</h3>
+            <h3 id="routineSection" data-zh="推薦每日行程" data-en="Recommended Daily Schedule">推薦每日行程</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px;">
-                    <h4><i class="fas fa-sunrise"></i> <span id="morningTitle" data-zh="晨間例行" data-en="Morning Routine">晨間例行</span> <span id="morningProgress" style="font-size: 0.8em; opacity: 0.8;"></span>
-                    <button class="btn btn-small" onclick="openEditRoutine('morning')" style="float: right; margin: 0; background: rgba(255,255,255,0.9); color: var(--dark); font-size: 0.75em; padding: 4px 8px;"><i class="fas fa-edit"></i> <span class="editBtnText" data-zh="編輯" data-en="Edit">編輯</span></button></h4>
+                <div class="morning-routine-container">
+                    <h4><i class="fas fa-sunrise"></i> <span id="morningTitle" data-zh="晨間行程" data-en="Morning Schedule">晨間行程</span> <span id="morningProgress" style="font-size: 0.8em; opacity: 0.8;"></span>
+                    <button class="btn btn-small" onclick="openEditRoutine('morning')" style="float: right; margin: 0; background: rgba(0, 0, 0, 0.3); color: inherit; font-size: 0.75em; padding: 4px 8px;"><i class="fas fa-edit"></i> <span class="editBtnText" data-zh="編輯" data-en="Edit">編輯</span></button></h4>
                     <div id="morningRoutine"></div>
                 </div>
-                <div style="background: linear-gradient(135deg, #e74c3c 0%, #c0232b 100%); color: white; padding: 20px; border-radius: 8px;">
-                    <h4><i class="fas fa-moon"></i> <span id="eveningTitle" data-zh="晚間例行" data-en="Evening Routine">晚間例行</span> <span id="eveningProgress" style="font-size: 0.8em; opacity: 0.8;"></span>
-                    <button class="btn btn-small" onclick="openEditRoutine('evening')" style="float: right; margin: 0; background: rgba(255,255,255,0.9); color: var(--dark); font-size: 0.75em; padding: 4px 8px;"><i class="fas fa-edit"></i> <span class="editBtnText" data-zh="編輯" data-en="Edit">編輯</span></button></h4>
+                <div class="evening-routine-container">
+                    <h4><i class="fas fa-moon"></i> <span id="eveningTitle" data-zh="晚間行程" data-en="Evening Schedule">晚間行程</span> <span id="eveningProgress" style="font-size: 0.8em; opacity: 0.8;"></span>
+                    <button class="btn btn-small" onclick="openEditRoutine('evening')" style="float: right; margin: 0; background: rgba(0, 0, 0, 0.3); color: inherit; font-size: 0.75em; padding: 4px 8px;"><i class="fas fa-edit"></i> <span class="editBtnText" data-zh="編輯" data-en="Edit">編輯</span></button></h4>
                     <div id="eveningRoutine"></div>
                 </div>
             </div>
@@ -339,7 +895,7 @@
             <!-- Edit Routine Modal -->
             <div id="editRoutineModal" class="edit-routine-modal">
                 <div class="edit-routine-content">
-                    <h2 style="color: var(--primary); margin-bottom: 20px;"><span id="editRoutineTitle">編輯晨間例行</span></h2>
+                    <h2 style="color: var(--accent); margin-bottom: 20px;"><span id="editRoutineTitle">編輯晨間行程</span></h2>
                     <div id="editRoutineItems"></div>
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
                         <button class="btn btn-success" onclick="saveEditRoutine()" style="flex: 1;"><i class="fas fa-save"></i> <span id="saveRoutineBtn" data-zh="保存" data-en="Save">保存</span></button>
@@ -350,44 +906,44 @@
 
             <!-- CBT Practices -->
             <div class="mindfulness-section" id="cbtSection">
-                <h3 style="color: white; display: flex; align-items: center; gap: 10px;">
+                <h3 style="color: var(--text); display: flex; align-items: center; gap: 10px; margin-top: 0;">
                     <i class="fas fa-spa"></i> <span id="cbtTitle" data-zh="CBT焦點練習工具" data-en="CBT Focus Practice Tools">CBT焦點練習工具</span>
                 </h3>
                 
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                    <h4 style="color: white; margin-bottom: 10px;"><i class="fas fa-wind"></i> <span id="breathTitle" data-zh="正念呼吸練習" data-en="Mindfulness Breathing">正念呼吸練習</span></h4>
-                    <p id="breathDesc" style="font-size: 0.95em; margin-bottom: 10px;" data-zh="點擊圓圈開始呼吸練習，跟著脈衝節奏降低焦慮。" data-en="Click the circle to start breathing practice and follow the pulse rhythm to reduce anxiety.">點擊圓圈開始呼吸練習，跟著脈衝節奏降低焦慮。</p>
+                <div style="background: rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.2); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <h4 style="color: var(--text); margin-bottom: 10px; margin-top: 0;"><i class="fas fa-wind"></i> <span id="breathTitle" data-zh="正念呼吸練習" data-en="Mindfulness Breathing">正念呼吸練習</span></h4>
+                    <p id="breathDesc" style="font-size: 0.95em; margin-bottom: 10px; color: rgba(232, 232, 232, 0.9);" data-zh="點擊圓圈開始呼吸練習，跟著脈衝節奏降低焦慮。" data-en="Click the circle to start breathing practice and follow the pulse rhythm to reduce anxiety.">點擊圓圈開始呼吸練習，跟著脈衝節奏降低焦慮。</p>
                     <div id="breathCircle" class="breath-circle" onclick="startBreathPractice(); event.preventDefault(); return false;">
                         <span id="breathText" data-zh="點擊開始" data-en="Click to Start">點擊開始</span>
                     </div>
                 </div>
 
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                    <h4 style="color: white; margin-bottom: 10px;"><i class="fas fa-brain"></i> <span id="thoughtTitle" data-zh="認知重構練習" data-en="Cognitive Restructuring">認知重構練習</span></h4>
-                    <button class="btn" onclick="openThoughtRecord()" style="background: rgba(255,255,255,0.9); color: var(--dark); width: 100%;"><i class="fas fa-edit"></i> <span id="thoughtStartBtn" data-zh="開始練習" data-en="Start Practice">開始練習</span></button>
+                <div style="background: rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.2); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <h4 style="color: var(--text); margin-bottom: 10px; margin-top: 0;"><i class="fas fa-brain"></i> <span id="thoughtTitle" data-zh="認知重構練習" data-en="Cognitive Restructuring">認知重構練習</span></h4>
+                    <button class="btn" onclick="openThoughtRecord()" style="background: rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.9); color: var(--primary); width: 100%;"><i class="fas fa-edit"></i> <span id="thoughtStartBtn" data-zh="開始練習" data-en="Start Practice">開始練習</span></button>
                 </div>
 
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
-                    <h4 style="color: white; margin-bottom: 10px;"><i class="fas fa-leaf"></i> <span id="groundingTitle" data-zh="5-4-3-2-1接地技巧" data-en="5-4-3-2-1 Grounding">5-4-3-2-1接地技巧</span></h4>
-                    <button class="btn" onclick="startGrounding()" style="background: rgba(255,255,255,0.9); color: var(--dark); width: 100%;"><i class="fas fa-play"></i> <span id="groundingStartBtn" data-zh="開始接地" data-en="Start Grounding">開始接地</span></button>
+                <div style="background: rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.2); padding: 15px; border-radius: 8px; margin-bottom: 0;">
+                    <h4 style="color: var(--text); margin-bottom: 10px; margin-top: 0;"><i class="fas fa-leaf"></i> <span id="groundingTitle" data-zh="5-4-3-2-1接地技巧" data-en="5-4-3-2-1 Grounding">5-4-3-2-1接地技巧</span></h4>
+                    <button class="btn" onclick="startGrounding()" style="background: rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.9); color: var(--primary); width: 100%;"><i class="fas fa-play"></i> <span id="groundingStartBtn" data-zh="開始接地" data-en="Start Grounding">開始接地</span></button>
                 </div>
             </div>
 
             <!-- Modals -->
-            <div id="thoughtRecordModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000;">
-                <div style="background: white; padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;">
-                    <h2 style="color: var(--primary); margin-bottom: 20px;" id="thoughtModalTitle" data-zh="認知重構練習" data-en="Cognitive Restructuring Practice">認知重構練習</h2>
+            <div id="thoughtRecordModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000;">
+                <div style="background: linear-gradient(135deg, var(--primary), rgba(45, 0, 82, 0.8)); padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; border: 2px solid var(--accent); color: var(--text);">
+                    <h2 style="color: var(--accent); margin-bottom: 20px;" id="thoughtModalTitle" data-zh="認知重構練習" data-en="Cognitive Restructuring Practice">認知重構練習</h2>
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 5px;" id="negativeLabel" data-zh="負面想法：" data-en="Negative Thought:">負面想法：</label>
-                        <textarea id="negativThought" placeholder="例如：我永遠無法完成這個任務..." style="width: 100%; padding: 10px; border: 2px solid var(--light); border-radius: 6px; font-family: inherit; font-size: 1em;" rows="3"></textarea>
+                        <label style="display: block; font-weight: 500; margin-bottom: 5px; color: var(--text);" id="negativeLabel" data-zh="負面想法：" data-en="Negative Thought:">負面想法：</label>
+                        <textarea id="negativThought" placeholder="例如：我永遠無法完成這個任務..." style="width: 100%; padding: 10px; border: 2px solid var(--accent); border-radius: 6px; font-family: inherit; font-size: 1em; background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.8); color: var(--text);" rows="3"></textarea>
                     </div>
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 5px;" id="evidenceLabel" data-zh="證據支持這個想法：" data-en="Evidence supporting this thought:">證據支持這個想法：</label>
-                        <textarea id="evidence" placeholder="列舉事實證據..." style="width: 100%; padding: 10px; border: 2px solid var(--light); border-radius: 6px; font-family: inherit; font-size: 1em;" rows="3"></textarea>
+                        <label style="display: block; font-weight: 500; margin-bottom: 5px; color: var(--text);" id="evidenceLabel" data-zh="證據支持這個想法：" data-en="Evidence supporting this thought:">證據支持這個想法：</label>
+                        <textarea id="evidence" placeholder="列舉事實證據..." style="width: 100%; padding: 10px; border: 2px solid var(--accent); border-radius: 6px; font-family: inherit; font-size: 1em; background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.8); color: var(--text);" rows="3"></textarea>
                     </div>
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 5px;" id="realisticLabel" data-zh="更現實的想法：" data-en="More realistic thought:">更現實的想法：</label>
-                        <textarea id="realisticThought" placeholder="例如：我可以分小步驟完成..." style="width: 100%; padding: 10px; border: 2px solid var(--light); border-radius: 6px; font-family: inherit; font-size: 1em;" rows="3"></textarea>
+                        <label style="display: block; font-weight: 500; margin-bottom: 5px; color: var(--text);" id="realisticLabel" data-zh="更現實的想法：" data-en="More realistic thought:">更現實的想法：</label>
+                        <textarea id="realisticThought" placeholder="例如：我可以分小步驟完成..." style="width: 100%; padding: 10px; border: 2px solid var(--accent); border-radius: 6px; font-family: inherit; font-size: 1em; background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.8); color: var(--text);" rows="3"></textarea>
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn btn-success" onclick="saveThoughtRecord()" style="flex: 1;"><i class="fas fa-check"></i> <span id="thoughtCompleteBtn" data-zh="練習完成" data-en="Complete">練習完成</span></button>
@@ -396,9 +952,9 @@
                 </div>
             </div>
 
-            <div id="groundingModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000;">
-                <div style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; text-align: center;">
-                    <h2 style="color: var(--primary); margin-bottom: 20px;"><span id="groundingModalTitle">5-4-3-2-1</span> <span id="groundingModalSubtitle" data-zh="接地技巧" data-en="Grounding">接地技巧</span></h2>
+            <div id="groundingModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000;">
+                <div style="background: linear-gradient(135deg, var(--primary), rgba(45, 0, 82, 0.8)); padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; text-align: center; border: 2px solid var(--accent); color: var(--text);">
+                    <h2 style="color: var(--accent); margin-bottom: 20px;"><span id="groundingModalTitle">5-4-3-2-1</span> <span id="groundingModalSubtitle" data-zh="接地技巧" data-en="Grounding">接地技巧</span></h2>
                     <div id="groundingSteps" style="margin: 20px 0;"></div>
                     <button class="btn" onclick="closeGrounding()" style="width: 100%;"><i class="fas fa-times"></i> <span id="groundingCompleteBtn" data-zh="完成練習" data-en="Complete">完成練習</span></button>
                 </div>
@@ -406,85 +962,91 @@
 
             <!-- Task Decomposition & Management -->
             <h3 id="taskSection" data-zh="智能任務管理" data-en="Smart Task Management">智能任務管理</h3>
-            <p id="taskDesc" style="color: #666; font-size: 0.95em; margin-bottom: 15px;" data-zh="將大任務自動分解，或手動添加小步驟" data-en="Automatically break down large tasks or manually add small steps">將大任務自動分解，或手動添加小步驟</p>
-            
-            <div class="input-group">
-                <input type="text" id="newTask" style="flex: 1;">
-                <button class="btn btn-success" onclick="addTask()"><i class="fas fa-plus"></i> <span id="addTaskBtn" data-zh="新增" data-en="Add">新增</span></button>
-                <button class="btn" onclick="openTaskDecompose()" title="自動分解任務"><i class="fas fa-sitemap"></i> <span id="decomposeBtn" data-zh="分解" data-en="Decompose">分解</span></button>
-            </div>
+            <div class="task-management-section" style="padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                <p id="taskDesc" style="color: var(--text); font-size: 0.95em; margin-bottom: 15px;" data-zh="將大任務自動分解，或手動添加小步驟" data-en="Automatically break down large tasks or manually add small steps">將大任務自動分解，或手動添加小步驟</p>
+                
+                <div class="input-group">
+                    <input type="text" id="newTask" style="flex: 1; border-color: var(--accent);">
+                    <button class="btn btn-success" onclick="addTask()"><i class="fas fa-plus"></i> <span id="addTaskBtn" data-zh="新增" data-en="Add">新增</span></button>
+                    <button class="btn decompose-btn" onclick="openTaskDecompose()" title="自動分解任務"><i class="fas fa-sitemap"></i> <span id="decomposeBtn" data-zh="分解" data-en="Decompose">分解</span></button>
+                </div>
 
-            <!-- Task Decompose Modal -->
-            <div id="decomposeModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000;">
-                <div style="background: white; padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;">
-                    <h2 style="color: var(--primary); margin-bottom: 20px;" id="decomposeTitle" data-zh="任務分解設定" data-en="Task Decomposition Settings">任務分解設定</h2>
-                    <p id="decomposeDesc" style="color: #666; margin-bottom: 15px;" data-zh="編輯每個步驟的內容：" data-en="Edit each step:">編輯每個步驟的內容：</p>
-                    <div id="decomposeStepsContainer"></div>
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button class="btn btn-success" onclick="confirmTaskDecompose()" style="flex: 1;"><i class="fas fa-check"></i> <span id="confirmDecomposeBtn" data-zh="確認分解" data-en="Confirm">確認分解</span></button>
-                        <button class="btn" onclick="closeTaskDecompose()" style="flex: 1; background: #999;"><i class="fas fa-times"></i> <span id="closeDecomposeBtn" data-zh="關閉" data-en="Close">關閉</span></button>
+                <!-- Task Decompose Modal -->
+                <div id="decomposeModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000;">
+                    <div style="background: linear-gradient(135deg, var(--primary), rgba(45, 0, 82, 0.8)); padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; border: 2px solid var(--accent); color: var(--text);">
+                        <h2 style="color: var(--accent); margin-bottom: 20px;" id="decomposeTitle" data-zh="任務分解設定" data-en="Task Decomposition Settings">任務分解設定</h2>
+                        <p id="decomposeDesc" style="color: var(--text); margin-bottom: 15px;" data-zh="編輯每個步驟的內容：" data-en="Edit each step:">編輯每個步驟的內容：</p>
+                        <div id="decomposeStepsContainer"></div>
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="btn btn-success" onclick="confirmTaskDecompose()" style="flex: 1;"><i class="fas fa-check"></i> <span id="confirmDecomposeBtn" data-zh="確認分解" data-en="Confirm">確認分解</span></button>
+                            <button class="btn" onclick="closeTaskDecompose()" style="flex: 1; background: #999;"><i class="fas fa-times"></i> <span id="closeDecomposeBtn" data-zh="關閉" data-en="Close">關閉</span></button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <ul class="task-list" id="tasks"></ul>
+                <ul class="task-list" id="tasks"></ul>
 
-            <div class="progress-summary" id="progressSummary">
-                <div id="progressLabel" style="font-size: 0.9em; color: #666;" data-zh="進度" data-en="Progress">進度</div>
-                <div class="percentage" id="percentage">0%</div>
-                <div id="progressText" style="color: #666; font-size: 0.9em; margin-top: 5px;"></div>
+                <div class="progress-summary" id="progressSummary">
+                    <div id="progressLabel" style="font-size: 0.9em; color: var(--text);" data-zh="進度" data-en="Progress">進度</div>
+                    <div class="percentage" id="percentage">0%</div>
+                    <div id="progressText" style="color: var(--text); font-size: 0.9em; margin-top: 5px;"></div>
+                </div>
             </div>
 
             <!-- Pomodoro Timer -->
             <h3 id="timerSection" data-zh="番茄焦點計時" data-en="Pomodoro Timer">番茄焦點計時</h3>
-            <div style="display: flex; align-items: center; gap: 15px; margin: 20px 0; background: #f8f9fa; padding: 15px; border-radius: 8px; flex-wrap: wrap;">
-                <label style="font-weight: 500; color: var(--dark); min-width: 100px;" id="timerLabel" data-zh="計時分鐘數：" data-en="Minutes:">計時分鐘數：</label>
-                <input type="range" id="timerMinutes" min="1" max="60" value="25" step="1" style="flex: 1; cursor: pointer; height: 8px; border-radius: 5px; background: linear-gradient(to right, #e74c3c, #f39c12, #2ecc71); min-width: 100px;">
-                <span id="timerMinutesDisplay" style="min-width: 50px; text-align: center; font-weight: bold; color: var(--primary); font-size: 1.2em;">25</span>
-                <span id="timerMinLabel" style="color: #666;" data-zh="分鐘" data-en="min">分鐘</span>
-            </div>
+            <div class="timer-section">
+                <div style="display: flex; align-items: center; gap: 15px; margin: 20px 0; background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2); padding: 15px; border-radius: 8px; flex-wrap: wrap;">
+                    <label style="font-weight: 500; color: var(--text); min-width: 100px;" id="timerLabel" data-zh="計時分鐘數：" data-en="Minutes:">計時分鐘數：</label>
+                    <input type="range" id="timerMinutes" min="1" max="60" value="25" step="1" style="flex: 1; cursor: pointer; height: 8px; border-radius: 5px; background: linear-gradient(to right, var(--accent), var(--success)); min-width: 100px;">
+                    <span id="timerMinutesDisplay" style="min-width: 50px; text-align: center; font-weight: bold; color: var(--success); font-size: 1.2em;">25</span>
+                    <span id="timerMinLabel" style="color: var(--text);" data-zh="分鐘" data-en="min">分鐘</span>
+                </div>
 
-            <!-- Timer Sound Settings -->
-            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                <h4 style="margin-bottom: 15px;"><i class="fas fa-volume-up"></i> <span id="timerSoundTitle" data-zh="計時器鬧鐘設定" data-en="Timer Alarm Settings">計時器鬧鐘設定</span></h4>
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <label style="font-weight: 500;" id="soundToggleLabel" data-zh="鬧鐘開關：" data-en="Sound:">鬧鐘開關：</label>
-                    <button class="btn btn-small" id="timerSoundToggle" onclick="toggleTimerSound()" style="margin: 0;">
-                        <i class="fas fa-volume-up"></i> <span id="timerSoundStatus" data-zh="開啟" data-en="On">開啟</span>
-                    </button>
+                <!-- Timer Sound Settings -->
+                <div style="background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2); padding: 15px; border-radius: 8px; margin: 15px 0; border: 2px solid var(--accent-light);">
+                    <h4 style="margin-bottom: 15px; color: var(--text);"><i class="fas fa-volume-up"></i> <span id="timerSoundTitle" data-zh="計時器鬧鐘設定" data-en="Timer Alarm Settings">計時器鬧鐘設定</span></h4>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <label style="font-weight: 500; color: var(--text);" id="soundToggleLabel" data-zh="鬧鐘開關：" data-en="Sound:">鬧鐘開關：</label>
+                        <button class="btn btn-small" id="timerSoundToggle" onclick="toggleTimerSound()" style="margin: 0;">
+                            <i class="fas fa-volume-up"></i> <span id="timerSoundStatus" data-zh="開啟" data-en="On">開啟</span>
+                        </button>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <label style="font-weight: 500; min-width: 80px; color: var(--text);" id="volumeLabel" data-zh="音量調整：" data-en="Volume:">音量調整：</label>
+                        <input type="range" id="timerVolume" min="0" max="100" value="50" style="flex: 1; cursor: pointer; min-width: 100px;">
+                        <span id="timerVolumeDisplay" style="min-width: 50px; text-align: center; font-weight: bold; color: var(--success);">50%</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px; flex-wrap: wrap;">
+                        <label style="font-weight: 500; min-width: 80px; color: var(--text);" id="soundTypeLabel" data-zh="鬧鈴聲音：" data-en="Alarm Sound:">鬧鈴聲音：</label>
+                        <select id="timerSoundType" style="flex: 1; padding: 8px; border: 2px solid var(--accent); border-radius: 6px; min-width: 150px; background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.8); color: var(--text);">
+                        </select>
+                        <button class="btn btn-small" onclick="testTimerSound()" style="margin: 0; background: var(--accent-light);"><i class="fas fa-play"></i> <span id="testBtn" data-zh="測試" data-en="Test">測試</span></button>
+                    </div>
                 </div>
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <label style="font-weight: 500; min-width: 80px;" id="volumeLabel" data-zh="音量調整：" data-en="Volume:">音量調整：</label>
-                    <input type="range" id="timerVolume" min="0" max="100" value="50" style="flex: 1; cursor: pointer; min-width: 100px;">
-                    <span id="timerVolumeDisplay" style="min-width: 50px; text-align: center; font-weight: bold; color: var(--primary);">50%</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px; flex-wrap: wrap;">
-                    <label style="font-weight: 500; min-width: 80px;" id="soundTypeLabel" data-zh="鬧鈴聲音：" data-en="Alarm Sound:">鬧鈴聲音：</label>
-                    <select id="timerSoundType" style="flex: 1; padding: 8px; border: 2px solid var(--light); border-radius: 6px; min-width: 150px;" onchange="updateSoundTypeOptions()">
-                    </select>
-                    <button class="btn btn-small" onclick="testTimerSound()" style="margin: 0;"><i class="fas fa-play"></i> <span id="testBtn" data-zh="測試" data-en="Test">測試</span></button>
-                </div>
-            </div>
-            
-            <div class="timer-display">
-                <div id="timer">25:00</div>
-                <div id="progress"><div class="bar" id="progressBar"><span id="timerPercent">0%</span></div></div>
                 
-                <button class="btn btn-success" id="startTimer" onclick="startTimer()"><i class="fas fa-play"></i> <span id="startTimerBtn" data-zh="開始計時" data-en="Start">開始計時</span></button>
-                <button class="btn btn-danger hidden" id="stopTimer" onclick="stopTimer()"><i class="fas fa-stop"></i> <span id="stopTimerBtn" data-zh="停止" data-en="Stop">停止</span></button>
-                
-                <div id="timerMessage"></div>
+                <div class="timer-display">
+                    <div id="timer">25:00</div>
+                    <div id="progress"><div class="bar" id="progressBar"><span id="timerPercent">0%</span></div></div>
+                    
+                    <button class="btn btn-success" id="startTimer" onclick="startTimer()"><i class="fas fa-play"></i> <span id="startTimerBtn" data-zh="開始計時" data-en="Start">開始計時</span></button>
+                    <button class="btn btn-danger hidden" id="stopTimer" onclick="stopTimer()"><i class="fas fa-stop"></i> <span id="stopTimerBtn" data-zh="停止" data-en="Stop">停止</span></button>
+                    
+                    <div id="timerMessage"></div>
+                </div>
             </div>
 
             <!-- Emotion Tracking -->
             <h3 id="emotionSection" data-zh="情緒追蹤日誌" data-en="Emotion Tracking Log">情緒追蹤日誌</h3>
-            <div style="display: flex; gap: 10px; margin: 10px 0; justify-content: space-around; flex-wrap: wrap;">
-                <button class="btn btn-small" onclick="logEmotion('😄', 'happy'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😄</span> <span class="emotionLabel-happy" data-zh="高興" data-en="Happy">高興</span></button>
-                <button class="btn btn-small" onclick="logEmotion('😐', 'calm'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😐</span> <span class="emotionLabel-calm" data-zh="平靜" data-en="Calm">平靜</span></button>
-                <button class="btn btn-small" onclick="logEmotion('😞', 'sad'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😞</span> <span class="emotionLabel-sad" data-zh="沮喪" data-en="Sad">沮喪</span></button>
-                <button class="btn btn-small" onclick="logEmotion('😰', 'anxious'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😰</span> <span class="emotionLabel-anxious" data-zh="焦慮" data-en="Anxious">焦慮</span></button>
+            <div class="emotion-section" style="padding: 20px; border-radius: 12px; border: 2px solid var(--accent);">
+                <div style="display: flex; gap: 10px; margin: 10px 0; justify-content: space-around; flex-wrap: wrap;">
+                    <button class="btn btn-small" onclick="logEmotion('😄', 'happy'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😄</span> <span class="emotionLabel-happy" data-zh="高興" data-en="Happy">高興</span></button>
+                    <button class="btn btn-small" onclick="logEmotion('😐', 'calm'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😐</span> <span class="emotionLabel-calm" data-zh="平靜" data-en="Calm">平靜</span></button>
+                    <button class="btn btn-small" onclick="logEmotion('😞', 'sad'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😞</span> <span class="emotionLabel-sad" data-zh="沮喪" data-en="Sad">沮喪</span></button>
+                    <button class="btn btn-small" onclick="logEmotion('😰', 'anxious'); event.preventDefault(); return false;"><span style="font-size: 1.5em;">😰</span> <span class="emotionLabel-anxious" data-zh="焦慮" data-en="Anxious">焦慮</span></button>
+                </div>
+                <div id="emotionLog"></div>
             </div>
-            <div id="emotionLog"></div>
 
             <!-- Daily Streak -->
             <h3 id="streakSection" data-zh="連續打卡" data-en="Daily Streak">連續打卡</h3>
@@ -501,17 +1063,17 @@
 
             <!-- Quiz History -->
             <h3 id="historySection" data-zh="測驗歷史記錄" data-en="Quiz History">測驗歷史記錄</h3>
-            <div id="quizHistory" style="background: #f8f9fa; padding: 20px; border-radius: 8px; max-height: 300px; overflow-y: auto;"></div>
+            <div id="quizHistory" style="background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2); padding: 20px; border-radius: 8px; max-height: 300px; overflow-y: auto; border: 2px solid var(--accent-light); color: var(--text);"></div>
 
             <!-- Email Report Section -->
             <h3 id="emailSection" data-zh="傳送報告到Email" data-en="Send Report to Email">傳送報告到Email</h3>
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 15px 0;">
-                <p id="emailDesc" style="color: #333; margin-bottom: 15px;" data-zh="將您的進度報告發送到電子郵件，以便備份和追蹤。" data-en="Send your progress report to email for backup and tracking.">將您的進度報告發送到電子郵件，以便備份和追蹤。</p>
+            <div style="background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2); padding: 20px; border-radius: 8px; margin: 15px 0; border: 2px solid var(--accent-light);">
+                <p id="emailDesc" style="color: var(--text); margin-bottom: 15px;" data-zh="將您的進度報告發送到電子郵件，以便備份和追蹤。" data-en="Send your progress report to email for backup and tracking.">將您的進度報告發送到電子郵件，以便備份和追蹤。</p>
                 <div class="input-group">
-                    <input type="email" id="userEmail" placeholder="example@email.com" style="flex: 1;">
+                    <input type="email" id="userEmail" placeholder="example@email.com" style="flex: 1; border-color: var(--accent);">
                     <button class="btn btn-success" onclick="sendReportToEmail(); event.preventDefault(); return false;" style="margin: 0;"><i class="fas fa-paper-plane"></i> <span id="sendReportBtn" data-zh="發送報告" data-en="Send Report">發送報告</span></button>
                 </div>
-                <div id="emailStatus" style="margin-top: 10px; color: #666; font-size: 0.9em;"></div>
+                <div id="emailStatus" style="margin-top: 10px; color: var(--text); font-size: 0.9em;"></div>
                 <div class="info-text">
                     <i class="fas fa-info-circle"></i> <strong id="importantLabel" data-zh="重要提示：" data-en="Important:">重要提示：</strong><span id="importantText" data-zh="當前所有紀錄只會儲存在此裝置。如需在電子郵件保存報告副本，請輸入您的郵件地址並發送報告。系統會自動開啟您的郵件應用程式，您可以手動發送或將報告複製到剪貼板。" data-en="All records are currently only stored on this device. To save a copy of your report in email, enter your email address and send the report. The system will automatically open your email application where you can send it or copy the report to clipboard.">當前所有紀錄只會儲存在此裝置。如需在電子郵件保存報告副本，請輸入您的郵件地址並發送報告。系統會自動開啟您的郵件應用程式，您可以手動發送或將報告複製到剪貼板。</span>
                 </div>
@@ -522,7 +1084,7 @@
     <!-- Footer -->
     <footer id="footerContent">
         <p id="footerText">
-            這個工具是 Nelson Hsu 用 vibe coding 的方式 用 <i class="fas fa-heart" style="color: #e74c3c;"></i> 搓出來的，集結了網路上成效不錯的系統以及我的一些想法。<br>
+            這個工具是 Nelson Hsu 用 vibe coding 的方式 用 <i class="fas fa-heart" style="color: var(--accent);"></i> 搓出來的，集結了網路上成效不錯的系統以及我的一些想法。<br>
             如果有任何建議或是感謝歡迎私訊跟我說。我的IG: <strong>nelson.love.captue</strong>
         </p>
     </footer>
@@ -535,7 +1097,7 @@
         </button>
         <button class="nav-scroll-btn" onclick="scrollToSection('routineSection')">
             <i class="fas fa-calendar-check"></i>
-            <span class="nav-scroll-label" data-zh="例行程序" data-en="Routines">例行程序</span>
+            <span class="nav-scroll-label" data-zh="每日行程" data-en="Schedule">每日行程</span>
         </button>
         <button class="nav-scroll-btn" onclick="scrollToSection('cbtSection')">
             <i class="fas fa-spa"></i>
@@ -568,10 +1130,28 @@
     </div>
 
     <script>
-        // ===== 語言系統 =====
+        // ===== 配色系統 (四配色) =====
+        let currentTheme = localStorage.getItem('currentTheme') || 'theme-1';
         let currentLanguage = localStorage.getItem('language') || 'zh';
 
-        // 鬧鈴聲音選項定義
+        function switchTheme(themeNum) {
+            const body = document.body;
+            body.classList.remove('theme-1', 'theme-3', 'theme-4');
+            body.classList.add(`theme-${themeNum}`);
+            
+            currentTheme = `theme-${themeNum}`;
+            localStorage.setItem('currentTheme', currentTheme);
+            
+            document.getElementById('themeBtn1').classList.toggle('active', themeNum === 1);
+            document.getElementById('themeBtn3').classList.toggle('active', themeNum === 3);
+            document.getElementById('themeBtn4').classList.toggle('active', themeNum === 4);
+            
+            document.querySelectorAll('[style*="transition"]').forEach(el => {
+                el.style.transition = 'all 0.3s ease';
+            });
+        }
+
+        // ===== 語言系統 =====
         const alarmSoundOptions = {
             zh: {
                 bell: '清脆鈴聲 🔔',
@@ -587,7 +1167,6 @@
             }
         };
 
-        // 情緒標籤翻譯
         const emotionTranslations = {
             happy: { zh: '高興', en: 'Happy' },
             calm: { zh: '平靜', en: 'Calm' },
@@ -595,19 +1174,16 @@
             anxious: { zh: '焦慮', en: 'Anxious' }
         };
 
-        // 任務輸入框提示
         const taskInputPlaceholders = {
             zh: '例如：編輯影片片段...',
             en: 'Example: Edit video clips...'
         };
 
-        // 頁尾署名內容
         const footerContent = {
-            zh: '這個工具是 Nelson Hsu 用 vibe coding 的方式 用 <i class="fas fa-heart" style="color: #e74c3c;"></i> 搓出來的，集結了網路上成效不錯的系統以及我的一些想法。<br>如果有任何建議或是感謝歡迎私訊跟我說。我的IG: <strong>nelson.love.captue</strong>',
-            en: 'This tool was whipped up by Nelson Hsu through vibe coding (with lots of <i class="fas fa-heart" style="color: #e74c3c;"></i>), mixing together some solid systems I found online with my own ideas. Got feedback or just wanna say thanks? Shoot me a DM! My IG is <strong>nelson.love.captue</strong>'
+            zh: '這個工具是 Nelson Hsu 用 vibe coding 的方式 用 <i class="fas fa-heart" style="color: var(--accent);"></i> 搓出來的，集結了網路上成效不錯的系統以及我的一些想法。<br>如果有任何建議或是感謝歡迎私訊跟我說。我的IG: <strong>nelson.love.captue</strong>',
+            en: 'This tool was whipped up by Nelson Hsu through vibe coding (with lots of <i class="fas fa-heart" style="color: var(--accent);"></i>), mixing together some solid systems I found online with my own ideas. Got feedback or just wanna say thanks? Shoot me a DM! My IG is <strong>nelson.love.captue</strong>'
         };
 
-        // 預設例行程序
         const defaultMorningRoutine = [
             { text: { zh: '起床', en: 'Wake Up' }, icon: '⏰', hint: { zh: '設定三個鬧鐘', en: 'Set 3 alarms' } },
             { text: { zh: '正念呼吸', en: 'Breathing' }, icon: '🧘', hint: { zh: '', en: '' } },
@@ -626,38 +1202,58 @@
             { text: { zh: '按時睡眠', en: 'Go to Bed' }, icon: '😴', hint: { zh: '', en: '' } }
         ];
 
-        // 全局變數儲存評估結果
-        let lastAssessmentScore = 0;
-        let lastAssessmentLevel = '';
-        let lastAssessmentAdvice = '';
-        let lastAssessmentTips = [];
+        const assessmentLevels = {
+            zh: {
+                mild: { title: '輕微傾向', advice: '很好！你的ADHD傾向輕微。透過日常習慣優化，專注力可快速改善。' },
+                moderate: { title: '中等傾向', advice: '中等程度ADHD症狀。結合運動、冥想與結構化計劃，6週內可見顯著進展。' },
+                significant: { title: '較明顯傾向', advice: '較明顯ADHD症狀。建議同時進行本計劃與專業評估（身心科/精神科）。' },
+                severe: { title: '嚴重傾向', advice: '症狀較嚴重，請優先尋求專業醫療評估。此工具可作為輔助。' }
+            },
+            en: {
+                mild: { title: 'Mild Tendency', advice: 'Great! Your ADHD tendency is mild. Your focus can improve quickly through daily habit optimization.' },
+                moderate: { title: 'Moderate Tendency', advice: 'Moderate ADHD symptoms. With exercise, meditation and structured planning, significant progress can be seen in 6 weeks.' },
+                significant: { title: 'Significant Tendency', advice: 'Significant ADHD symptoms. It is recommended to combine this program with professional evaluation (psychiatry/psychology).' },
+                severe: { title: 'Severe Tendency', advice: 'More severe symptoms. Please prioritize seeking professional medical evaluation. This tool can serve as a supplement.' }
+            }
+        };
 
-        // 編輯例行程序的全局變數
-        let editingRoutineType = '';
-        let editingRoutine = [];
+        const dailyTipsData = {
+            zh: [
+                '分解任務成5-10分鐘小步驟，避免過載。',
+                '每日練習正念呼吸：吸4秒、憋4秒、吐4秒，重複5次。',
+                '設定環境：移除手機通知，專注當前任務。',
+                '慶祝小勝利：完成任務後記錄成就。',
+                '結合運動：計時後散步5分鐘。',
+                '確保每晚8小時連續睡眠，規律三餐。',
+                '每週運動3-5次，中等強度有氧運動最有效。'
+            ],
+            en: [
+                'Break tasks into 5-10 minute steps to avoid overload.',
+                'Practice mindfulness breathing daily: Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds, repeat 5 times.',
+                'Set your environment: Remove phone notifications and focus on the current task.',
+                'Celebrate small wins: Record achievements after completing tasks.',
+                'Combine with exercise: Take a 5-minute walk after timing.',
+                'Ensure 8 hours of continuous sleep per night and regular meals.',
+                'Exercise 3-5 times per week; moderate intensity aerobic exercise is most effective.'
+            ]
+        };
 
         function switchLanguage(lang) {
             currentLanguage = lang;
             localStorage.setItem('language', lang);
             
-            // 更新語言按鈕
             document.getElementById('zhBtn').classList.toggle('active', lang === 'zh');
             document.getElementById('enBtn').classList.toggle('active', lang === 'en');
             
-            // 更新所有具有data-zh和data-en的元素
             document.querySelectorAll('[data-zh][data-en]').forEach(el => {
                 el.textContent = el.dataset[lang];
             });
 
-            // 更新編輯按鈕文字
             document.querySelectorAll('.editBtnText').forEach(el => {
                 el.textContent = el.dataset[lang];
             });
 
-            // 更新頁尾署名
             updateFooterContent();
-
-            // 更新動態生成的內容
             updateTaskInputPlaceholder();
             updateSoundTypeOptions();
             updateEmotionButtons();
@@ -665,12 +1261,10 @@
             updateBreathingText();
             updateGroundingSteps();
             
-            // 重新生成評估結果和建議（如果已完成測驗）
             if (hasCompletedQuiz && lastAssessmentScore > 0) {
                 regenerateDailyTips();
             }
             
-            // 如果已完成測驗，重新渲染所有依賴語言的內容
             if (hasCompletedQuiz) {
                 renderQuizHistory();
                 renderEmotionLog();
@@ -703,13 +1297,14 @@
         function updateSoundTypeOptions() {
             const select = document.getElementById('timerSoundType');
             if (select) {
+                const currentValue = select.value || timerSoundType;
                 select.innerHTML = '';
                 const options = alarmSoundOptions[currentLanguage];
                 Object.entries(options).forEach(([value, label]) => {
                     const option = document.createElement('option');
                     option.value = value;
                     option.textContent = label;
-                    if (value === timerSoundType) {
+                    if (value === currentValue || value === timerSoundType) {
                         option.selected = true;
                     }
                     select.appendChild(option);
@@ -743,26 +1338,8 @@
             // 接地步驟會在startGrounding()時重新生成
         }
 
-        // 重新生成每日建議（針對語言切換）
         function regenerateDailyTips() {
-            const tipsData = currentLanguage === 'zh' ? [
-                '分解任務成5-10分鐘小步驟，避免過載。',
-                '每日練習正念呼吸：吸4秒、憋4秒、吐4秒，重複5次。',
-                '設定環境：移除手機通知，專注當前任務。',
-                '慶祝小勝利：完成任務後記錄成就。',
-                '結合運動：計時後散步5分鐘。',
-                '確保每晚8小時連續睡眠，規律三餐。',
-                '每週運動3-5次，中等強度有氧運動最有效。'
-            ] : [
-                'Break tasks into 5-10 minute steps to avoid overload.',
-                'Practice mindfulness breathing daily: Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds, repeat 5 times.',
-                'Set your environment: Remove phone notifications and focus on the current task.',
-                'Celebrate small wins: Record achievements after completing tasks.',
-                'Combine with exercise: Take a 5-minute walk after timing.',
-                'Ensure 8 hours of continuous sleep per night and regular meals.',
-                'Exercise 3-5 times per week; moderate intensity aerobic exercise is most effective.'
-            ];
-
+            const tipsData = dailyTipsData[currentLanguage];
             const tipCount = Math.min(5, Math.ceil(lastAssessmentScore / 10));
             const selectedTips = tipsData.slice(0, tipCount);
             
@@ -774,8 +1351,15 @@
                 ).join('');
         }
 
-        // 初始化語言按鈕
         window.addEventListener('load', () => {
+            if (currentTheme === 'theme-3') {
+                switchTheme(3);
+            } else if (currentTheme === 'theme-4') {
+                switchTheme(4);
+            } else {
+                switchTheme(1);
+            }
+            
             document.getElementById(currentLanguage === 'zh' ? 'zhBtn' : 'enBtn').classList.add('active');
             document.getElementById(currentLanguage === 'zh' ? 'enBtn' : 'zhBtn').classList.remove('active');
             updateTaskInputPlaceholder();
@@ -784,7 +1368,6 @@
             triggerLevelBadgeAnimation();
         });
 
-        // 開啟時XP框動畫 (2秒，強度遞減)
         function triggerLevelBadgeAnimation() {
             const badge = document.querySelector('.level-badge');
             if (badge) {
@@ -796,20 +1379,23 @@
         }
 
         // ===== 例行程序編輯功能 =====
+        let editingRoutineType = '';
+        let editingRoutine = [];
+
         function openEditRoutine(type) {
             editingRoutineType = type;
             const routines = type === 'morning' ? JSON.parse(localStorage.getItem('morningRoutine')) || defaultMorningRoutine : JSON.parse(localStorage.getItem('eveningRoutine')) || defaultEveningRoutine;
             editingRoutine = JSON.parse(JSON.stringify(routines));
 
-            const title = type === 'morning' ? getText('編輯晨間例行', 'Edit Morning Routine') : getText('編輯晚間例行', 'Edit Evening Routine');
+            const title = type === 'morning' ? getText('編輯晨間行程', 'Edit Morning Schedule') : getText('編輯晚間行程', 'Edit Evening Schedule');
             document.getElementById('editRoutineTitle').textContent = title;
 
             const itemsDiv = document.getElementById('editRoutineItems');
             itemsDiv.innerHTML = editingRoutine.map((item, index) => `
-                <div style="margin-bottom: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px;">
+                <div style="margin-bottom: 15px; padding: 12px; background: rgba(var(--accent-light-rgb, 138), var(--accent-light-grb, 43), var(--accent-light-brg, 226), 0.2); border-radius: 8px; border: 1px solid var(--accent-light);">
                     <div style="display: flex; gap: 10px; margin-bottom: 8px;">
                         <span style="font-size: 1.5em;">${item.icon}</span>
-                        <input type="text" id="routine_item_${index}" value="${item.text[currentLanguage]}" style="flex: 1; padding: 8px; border: 1px solid var(--primary); border-radius: 4px;" />
+                        <input type="text" id="routine_item_${index}" value="${item.text[currentLanguage]}" style="flex: 1; padding: 8px; border: 1px solid var(--accent); border-radius: 4px; background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.8); color: var(--text);" />
                         <button class="btn btn-small btn-danger" onclick="deleteRoutineItem(${index})" style="margin: 0;"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
@@ -836,7 +1422,7 @@
             
             closeEditRoutine();
             renderRoutines();
-            addXP(20, '✅ ' + getText('編輯例行程序', 'Edit Routine'));
+            addXP(10, '✅ ' + getText('編輯行程', 'Edit Schedule'));
         }
 
         function closeEditRoutine() {
@@ -874,7 +1460,10 @@
         let timerSoundEnabled = localStorage.getItem('timerSoundEnabled') !== 'false';
         let timerVolume = parseInt(localStorage.getItem('timerVolume')) || 50;
         let timerSoundType = localStorage.getItem('timerSoundType') || 'bell';
-
+        let lastAssessmentScore = 0;
+        let lastAssessmentLevel = '';
+        let lastAssessmentAdvice = '';
+        let lastAssessmentTips = [];
         let audioContext;
 
         function renderQuestions() {
@@ -897,12 +1486,12 @@
                 sliderInput.min = '1';
                 sliderInput.max = '5';
                 sliderInput.value = '3';
-                sliderInput.style.cssText = 'flex: 1; cursor: pointer; height: 8px; border-radius: 5px; background: linear-gradient(to right, #e74c3c 0%, #f39c12 25%, #2ecc71 100%);';
+                sliderInput.style.cssText = 'flex: 1; cursor: pointer; height: 8px; border-radius: 5px; background: linear-gradient(to right, var(--accent-light), var(--accent));';
                 
                 const valueDisplay = document.createElement('span');
                 valueDisplay.id = `val${i}`;
                 valueDisplay.textContent = '3';
-                valueDisplay.style.cssText = 'min-width: 40px; text-align: center; font-weight: bold; color: var(--primary); font-size: 1.2em;';
+                valueDisplay.style.cssText = 'min-width: 40px; text-align: center; font-weight: bold; color: var(--success); font-size: 1.2em;';
                 
                 const labels = currentLanguage === 'zh' 
                     ? ['從不', '少有', '有時', '經常', '總是']
@@ -910,7 +1499,7 @@
                 const labelDisplay = document.createElement('span');
                 labelDisplay.id = `label${i}`;
                 labelDisplay.textContent = labels[2];
-                labelDisplay.style.cssText = 'min-width: 60px; text-align: left; font-size: 0.9em; color: #666;';
+                labelDisplay.style.cssText = 'min-width: 60px; text-align: left; font-size: 0.9em; color: var(--text);';
                 
                 sliderInput.addEventListener('input', (e) => {
                     const val = e.target.value;
@@ -976,19 +1565,17 @@
 
             let level, advice;
             if (score < 15) {
-                level = getText('輕微傾向', 'Mild Tendency');
-                advice = getText('很好！你的ADHD傾向輕微。透過日常習慣優化，專注力可快速改善。', 'Great! Your ADHD tendency is mild. Your focus can improve quickly through daily habit optimization.');
+                level = assessmentLevels[currentLanguage].mild.title;
+                advice = assessmentLevels[currentLanguage].mild.advice;
             } else if (score < 25) {
-                level = getText('中等傾向', 'Moderate Tendency');
-                advice = getText('中等程度ADHD症狀。結合運動、冥想與結構化計劃，6週內可見顯著進展。', 'Moderate ADHD symptoms. With exercise, meditation and structured planning, significant progress can be seen in 6 weeks.');
+                level = assessmentLevels[currentLanguage].moderate.title;
+                advice = assessmentLevels[currentLanguage].moderate.advice;
             } else if (score < 35) {
-                level = getText('較明顯傾向', 'Significant Tendency');
-                advice = currentLanguage === 'zh' 
-                    ? '較明顯ADHD症狀。建議同時進行本計劃與專業評估（身心科/精神科）。'
-                    : 'Significant ADHD symptoms. It is recommended to combine this program with professional evaluation (psychiatry/psychology).';
+                level = assessmentLevels[currentLanguage].significant.title;
+                advice = assessmentLevels[currentLanguage].significant.advice;
             } else {
-                level = getText('嚴重傾向', 'Severe Tendency');
-                advice = getText('症狀較嚴重，請優先尋求專業醫療評估。此工具可作為輔助。', 'More severe symptoms. Please prioritize seeking professional medical evaluation. This tool can serve as a supplement.');
+                level = assessmentLevels[currentLanguage].severe.title;
+                advice = assessmentLevels[currentLanguage].severe.advice;
             }
 
             lastAssessmentLevel = level;
@@ -997,24 +1584,7 @@
             document.getElementById('score').textContent = score + '/50';
             document.getElementById('level').textContent = level;
 
-            const tips = currentLanguage === 'zh' ? [
-                '分解任務成5-10分鐘小步驟，避免過載。',
-                '每日練習正念呼吸：吸4秒、憋4秒、吐4秒，重複5次。',
-                '設定環境：移除手機通知，專注當前任務。',
-                '慶祝小勝利：完成任務後記錄成就。',
-                '結合運動：計時後散步5分鐘。',
-                '確保每晚8小時連續睡眠，規律三餐。',
-                '每週運動3-5次，中等強度有氧運動最有效。'
-            ] : [
-                'Break tasks into 5-10 minute steps to avoid overload.',
-                'Practice mindfulness breathing daily: Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds, repeat 5 times.',
-                'Set your environment: Remove phone notifications and focus on the current task.',
-                'Celebrate small wins: Record achievements after completing tasks.',
-                'Combine with exercise: Take a 5-minute walk after timing.',
-                'Ensure 8 hours of continuous sleep per night and regular meals.',
-                'Exercise 3-5 times per week; moderate intensity aerobic exercise is most effective.'
-            ];
-
+            const tips = dailyTipsData[currentLanguage];
             const tipCount = Math.min(5, Math.ceil(score / 10));
             const selectedTips = tips.slice(0, tipCount);
             lastAssessmentTips = selectedTips;
@@ -1025,6 +1595,7 @@
                     `<div class="tip"><i class="fas fa-star"></i> <div>${t}</div></div>`
                 ).join('');
 
+            addXP(50, '📋 ' + getText('完成測驗', 'Complete Quiz'));
             updateStats();
             renderQuizHistory();
             renderEnergyLevel();
@@ -1071,7 +1642,7 @@
             const suggestedTasks = energyTasks[currentEnergy].join(' | ');
             document.getElementById('taskRecommendation').innerHTML = `
                 <div style="margin-bottom: 10px;"><strong>${recommendation}</strong></div>
-                <div style="font-size: 0.9em; color: #666;">${suggestedTasks}</div>
+                <div style="font-size: 0.9em; color: var(--text);">${suggestedTasks}</div>
             `;
         }
 
@@ -1079,7 +1650,7 @@
             currentEnergy = level;
             localStorage.setItem('currentEnergy', level);
             renderEnergyLevel();
-            addXP(10, '⚡ ' + getText('設定精力水平', 'Set Energy Level'));
+            addXP(5, '⚡ ' + getText('設定精力水平', 'Set Energy Level'));
         }
 
         function renderRoutines() {
@@ -1097,12 +1668,12 @@
                 const isCompleted = routineCompletedToday.steps && routineCompletedToday.steps[stepKey];
                 if (isCompleted) morningCompleted++;
                 return `
-                <div style="margin: 8px 0; padding: 12px; background: rgba(255,255,255,${isCompleted ? '0.3' : '0.1'}); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: ${isCompleted ? '0.7' : '1'};">
+                <div style="margin: 8px 0; padding: 12px; background: rgba(255, 255, 255, ${isCompleted ? '0.2' : '0.1'}); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: ${isCompleted ? '0.7' : '1'};">
                     <div>
                         <div style="font-weight: bold; ${isCompleted ? 'text-decoration: line-through;' : ''}">${r.icon} ${r.text[currentLanguage]}</div>
                         ${r.hint[currentLanguage] ? `<div style="font-size: 0.85em; opacity: 0.8;">${r.hint[currentLanguage]}</div>` : ''}
                     </div>
-                    <button class="btn btn-small" onclick="completeRoutineStep('morning', ${i})" style="background: rgba(255,255,255,0.9); color: var(--dark); margin: 0;"><i class="fas ${isCompleted ? 'fa-check-circle' : 'fa-circle'}"></i></button>
+                    <button class="btn btn-small" onclick="completeRoutineStep('morning', ${i})" style="background: rgba(255, 255, 255, 0.3); color: inherit; margin: 0;"><i class="fas ${isCompleted ? 'fa-check-circle' : 'fa-circle'}"></i></button>
                 </div>
             `}).join('');
             document.getElementById('morningProgress').textContent = `(${morningCompleted}/${morningRoutines.length})`;
@@ -1113,12 +1684,12 @@
                 const isCompleted = routineCompletedToday.steps && routineCompletedToday.steps[stepKey];
                 if (isCompleted) eveningCompleted++;
                 return `
-                <div style="margin: 8px 0; padding: 12px; background: rgba(255,255,255,${isCompleted ? '0.3' : '0.1'}); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: ${isCompleted ? '0.7' : '1'};">
+                <div style="margin: 8px 0; padding: 12px; background: rgba(255, 255, 255, ${isCompleted ? '0.2' : '0.1'}); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: ${isCompleted ? '0.7' : '1'};">
                     <div>
                         <div style="font-weight: bold; ${isCompleted ? 'text-decoration: line-through;' : ''}">${r.icon} ${r.text[currentLanguage]}</div>
                         ${r.hint[currentLanguage] ? `<div style="font-size: 0.85em; opacity: 0.8;">${r.hint[currentLanguage]}</div>` : ''}
                     </div>
-                    <button class="btn btn-small" onclick="completeRoutineStep('evening', ${i})" style="background: rgba(255,255,255,0.9); color: var(--dark); margin: 0;"><i class="fas ${isCompleted ? 'fa-check-circle' : 'fa-circle'}"></i></button>
+                    <button class="btn btn-small" onclick="completeRoutineStep('evening', ${i})" style="background: rgba(255, 255, 255, 0.3); color: inherit; margin: 0;"><i class="fas ${isCompleted ? 'fa-check-circle' : 'fa-circle'}"></i></button>
                 </div>
             `}).join('');
             document.getElementById('eveningProgress').textContent = `(${eveningCompleted}/${eveningRoutines.length})`;
@@ -1137,7 +1708,7 @@
 
             if (!routineCompletedToday.steps[stepKey]) {
                 routineCompletedToday.steps[stepKey] = true;
-                addXP(5, '✅ ' + getText('完成例行步驟', 'Complete Routine Step'));
+                addXP(10, '✅ ' + getText('完成行程步驟', 'Complete Schedule Step'));
             } else {
                 routineCompletedToday.steps[stepKey] = false;
             }
@@ -1178,7 +1749,7 @@
         function renderTasks() {
             const ul = document.getElementById('tasks');
             if (tasks.length === 0) {
-                ul.innerHTML = `<li style="text-align: center; color: #999; border: none;">${getText('還未新增任務，開始加入第一個吧！', 'No tasks yet. Add your first one!')}</li>`;
+                ul.innerHTML = `<li style="text-align: center; color: var(--text); border: none; opacity: 0.6; list-style: none;">${getText('還未新增任務，開始加入第一個吧！', 'No tasks yet. Add your first one!')}</li>`;
                 return;
             }
             ul.innerHTML = tasks.map((task, i) => {
@@ -1231,8 +1802,8 @@
             const container = document.getElementById('decomposeStepsContainer');
             container.innerHTML = defaultSteps.map((step, i) => `
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 5px;">${getText('步驟', 'Step')} ${i + 1}：</label>
-                    <input type="text" id="decompose_step_${i}" value="${step}" style="width: 100%; padding: 10px; border: 2px solid var(--light); border-radius: 6px; font-size: 1em;" />
+                    <label style="display: block; font-weight: 500; margin-bottom: 5px; color: var(--text);">${getText('步驟', 'Step')} ${i + 1}：</label>
+                    <input type="text" id="decompose_step_${i}" value="${step}" style="width: 100%; padding: 10px; border: 2px solid var(--accent); border-radius: 6px; font-size: 1em; background: rgba(var(--primary-rgb, 26), var(--primary-grb, 0), var(--primary-brg, 51), 0.8); color: var(--text);" />
                 </div>
             `).join('');
 
@@ -1333,7 +1904,7 @@
                 breathCircle.classList.add('breathing');
                 
                 let cycleCount = 0;
-                const maxCycles = 2;
+                const maxCycles = 4;
                 
                 const phases = [
                     { text: getText('吸氣...', 'Inhale...'), duration: 4 },
@@ -1387,7 +1958,6 @@
                 return;
             }
 
-            alert(getText('認知重構記錄已保存！', 'Record saved!'));
             document.getElementById('negativThought').value = '';
             document.getElementById('evidence').value = '';
             document.getElementById('realisticThought').value = '';
@@ -1413,8 +1983,8 @@
                     const step = steps[currentStep];
                     stepsDiv.innerHTML = `
                         <div style="font-size: 3em; margin-bottom: 10px;">${step.icon}</div>
-                        <h3 style="color: var(--primary); margin-bottom: 10px;">${step.title}</h3>
-                        <p style="font-size: 1.1em; margin-bottom: 20px;">${step.instruction}</p>
+                        <h3 style="color: var(--text); margin-bottom: 10px;">${step.title}</h3>
+                        <p style="font-size: 1.1em; margin-bottom: 20px; color: var(--text);">${step.instruction}</p>
                         <button class="btn btn-success" onclick="nextGroundingStep()" style="width: 100%;">${getText('下一步', 'Next')}</button>
                     `;
                     currentStep++;
@@ -1422,7 +1992,7 @@
                     stepsDiv.innerHTML = `
                         <div style="font-size: 2em; margin-bottom: 20px;">✅</div>
                         <h3 style="color: var(--success);">${getText('接地完成！', 'Complete!')}</h3>
-                        <p>${getText('你現在應該感到更加放鬆和專注。', 'You should feel more relaxed and focused now.')}</p>
+                        <p style="color: var(--text);">${getText('你現在應該感到更加放鬆和專注。', 'You should feel more relaxed and focused now.')}</p>
                     `;
                     addXP(35, '🌿 ' + getText('完成接地技巧', 'Complete Grounding'));
                 }
@@ -1452,7 +2022,7 @@
         function renderEmotionLog() {
             const logDiv = document.getElementById('emotionLog');
             if (emotionHistory.length === 0) {
-                logDiv.innerHTML = `<p style="color: #999;">${getText('尚無情緒記錄', 'No emotion records')}</p>`;
+                logDiv.innerHTML = `<p style="color: var(--text); opacity: 0.6;">${getText('尚無情緒記錄', 'No emotion records')}</p>`;
                 return;
             }
             const recent = emotionHistory.slice(-5);
@@ -1461,7 +2031,7 @@
                 return `<div class="emotion-log" style="display: flex; justify-content: space-between; align-items: center;">
                     <div style="flex: 1;">
                         <span style="font-size: 1.5em; margin-right: 10px;">${record.emoji}</span>
-                        <strong>${record.emotion}</strong> - ${record.time}
+                        <strong style="color: var(--text);">${record.emotion}</strong> - <span style="color: var(--text); opacity: 0.7;">${record.time}</span>
                     </div>
                     <div style="display: flex; gap: 5px;">
                         <button class="btn btn-small btn-danger" onclick="deleteEmotion(${actualIndex})" style="padding: 4px 8px; margin: 0;"><i class="fas fa-trash"></i></button>
@@ -1504,6 +2074,7 @@
                 stats.xp -= xpPerLevel;
                 stats.level++;
                 showLevelUpAnimation();
+                playLevelUpSound();
             }
             
             updateStats();
@@ -1516,15 +2087,15 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);
-                color: white;
+                background: linear-gradient(135deg, var(--accent), var(--success));
+                color: var(--primary);
                 padding: 40px;
                 border-radius: 15px;
                 font-size: 2em;
                 font-weight: bold;
                 z-index: 10000;
                 text-align: center;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
             `;
             div.innerHTML = `🎉 ${getText('升級到', 'Level Up to')} Lv.${stats.level}！`;
             document.body.appendChild(div);
@@ -1532,10 +2103,32 @@
             setTimeout(() => div.remove(), 2000);
         }
 
+        function playLevelUpSound() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const ctx = audioContext;
+            const gainNode = ctx.createGain();
+            gainNode.gain.value = 0.3;
+            gainNode.connect(ctx.destination);
+
+            const freqs = [523.25, 659.25, 783.99];
+            const now = ctx.currentTime;
+
+            freqs.forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                osc.frequency.value = freq;
+                osc.connect(gainNode);
+                osc.start(now + i * 0.15);
+                osc.stop(now + i * 0.15 + 0.2);
+            });
+        }
+
         function renderQuizHistory() {
             const historyDiv = document.getElementById('quizHistory');
             if (quizHistory.length === 0) {
-                historyDiv.innerHTML = `<p style="text-align: center; color: #999;">${getText('暫無測驗記錄', 'No quiz records')}</p>`;
+                historyDiv.innerHTML = `<p style="text-align: center; color: var(--text); opacity: 0.6;">${getText('暫無測驗記錄', 'No quiz records')}</p>`;
                 return;
             }
 
@@ -1549,10 +2142,10 @@
 
                 const scoreLabel = getText('分數', 'Score');
                 return `
-                    <div style="background: white; padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center;">
+                    <div style="background: rgba(var(--accent-rgb, 255), var(--accent-grb, 140), var(--accent-brg, 0), 0.2); padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid var(--accent); display: flex; justify-content: space-between; align-items: center;">
                         <div style="flex: 1;">
-                            <strong>${record.date}</strong>
-                            <div style="color: #666; font-size: 0.9em;">${scoreLabel}: ${record.score}/50 - ${level}</div>
+                            <strong style="color: var(--text);">${record.date}</strong>
+                            <div style="color: var(--text); font-size: 0.9em; opacity: 0.8;">${scoreLabel}: ${record.score}/50 - ${level}</div>
                         </div>
                         <button class="btn btn-small btn-danger" onclick="deleteQuizRecord(${idx})" style="margin: 0;"><i class="fas fa-trash"></i></button>
                     </div>
@@ -1573,7 +2166,7 @@
             const emailStatus = document.getElementById('emailStatus');
             
             if (!userEmail || !userEmail.includes('@')) {
-                emailStatus.innerHTML = `<span style="color: #e74c3c;"><i class="fas fa-times"></i> ${getText('請輸入有效的 Email 地址', 'Please enter a valid email')}</span>`;
+                emailStatus.innerHTML = `<span style="color: var(--accent);"><i class="fas fa-times"></i> ${getText('請輸入有效的 Email 地址', 'Please enter a valid email')}</span>`;
                 return;
             }
 
@@ -1652,18 +2245,18 @@ ${['🔴 Low', '🟠 Low-Medium', '🟡 Medium', '🟢 High', '🟢 Very High'][
             const mailtoLink = `mailto:${userEmail}?subject=${subject}&body=${body}`;
             
             navigator.clipboard.writeText(reportText).then(() => {
-                emailStatus.innerHTML = `<span style="color: #2ecc71;"><i class="fas fa-check"></i> ${getText('報告已複製到剪貼板！正在開啟郵件應用程式...', 'Report copied! Opening email...')}</span>`;
+                emailStatus.innerHTML = `<span style="color: var(--success);"><i class="fas fa-check"></i> ${getText('報告已複製到剪貼板！正在開啟郵件應用程式...', 'Report copied! Opening email...')}</span>`;
                 
                 setTimeout(() => {
                     window.location.href = mailtoLink;
                 }, 800);
                 
                 setTimeout(() => {
-                    emailStatus.innerHTML = `<span style="color: #2ecc71;"><i class="fas fa-check"></i> ${getText('報告已生成！請在郵件中粘貼或手動發送。', 'Report generated! Paste or send in email.')}</span>`;
+                    emailStatus.innerHTML = `<span style="color: var(--success);"><i class="fas fa-check"></i> ${getText('報告已生成！請在郵件中粘貼或手動發送。', 'Report generated! Paste or send in email.')}</span>`;
                     document.getElementById('userEmail').value = '';
                 }, 2000);
             }).catch(() => {
-                emailStatus.innerHTML = `<span style="color: #f39c12;"><i class="fas fa-info-circle"></i> ${getText('無法複製到剪貼板，請手動複製下方內容', 'Cannot copy to clipboard. Please copy manually.')}</span>`;
+                emailStatus.innerHTML = `<span style="color: var(--accent);"><i class="fas fa-info-circle"></i> ${getText('無法複製到剪貼板，請手動複製下方內容', 'Cannot copy to clipboard. Please copy manually.')}</span>`;
                 alert(reportText);
                 document.getElementById('userEmail').value = '';
             });
@@ -1766,7 +2359,7 @@ ${['🔴 Low', '🟠 Low-Medium', '🟡 Medium', '🟢 High', '🟢 Very High'][
             const btn = document.getElementById('timerSoundToggle');
             const status = document.getElementById('timerSoundStatus');
             if (timerSoundEnabled) {
-                btn.style.background = 'var(--success)';
+                btn.style.background = 'linear-gradient(135deg, var(--success), rgba(var(--success-rgb, 255), var(--success-grb, 215), var(--success-brg, 0), 0.9))';
                 status.textContent = getText('開啟', 'On');
             } else {
                 btn.style.background = '#999';
@@ -1787,7 +2380,7 @@ ${['🔴 Low', '🟠 Low-Medium', '🟡 Medium', '🟢 High', '🟢 Very High'][
             });
 
             if (timerSoundEnabled) {
-                document.getElementById('timerSoundToggle').style.background = 'var(--success)';
+                document.getElementById('timerSoundToggle').style.background = 'linear-gradient(135deg, var(--success), rgba(var(--success-rgb, 255), var(--success-grb, 215), var(--success-brg, 0), 0.9))';
             } else {
                 document.getElementById('timerSoundToggle').style.background = '#999';
             }
