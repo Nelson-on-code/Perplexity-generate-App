@@ -389,24 +389,21 @@
         }
 
         .breathing-circle.animating {
-            animation: breathing 8s ease-in-out infinite;
+            transition: transform 4s ease-in-out, box-shadow 4s ease-in-out;
         }
-
-        @keyframes breathing {
-            0%, 100% {
-                transform: scale(1);
-                box-shadow: 0 4px 20px rgba(80, 196, 196, 0.2);
-            }
-            25% {
-                transform: scale(1.1);
-            }
-            50% {
-                transform: scale(1.3);
-                box-shadow: 0 8px 30px rgba(80, 196, 196, 0.4);
-            }
-            75% {
-                transform: scale(1.1);
-            }
+        
+        .breathing-circle.inhale {
+            transform: scale(1.3);
+            box-shadow: 0 8px 30px rgba(80, 196, 196, 0.4);
+        }
+        
+        .breathing-circle.hold {
+            /* 屏氣時保持大小 */
+        }
+        
+        .breathing-circle.exhale {
+            transform: scale(1);
+            box-shadow: 0 4px 20px rgba(80, 196, 196, 0.2);
         }
 
         .breathing-text {
@@ -710,40 +707,40 @@
     <!-- 升級彈窗容器 -->
     <div id="levelUpModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal)); padding: 40px; border-radius: 20px; text-align: center; z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.4);">
         <div style="color: var(--text-primary); font-size: 3em; margin-bottom: 15px;">🎉</div>
-        <div style="color: var(--text-primary); font-size: 2.5em; font-weight: bold; margin-bottom: 10px;" id="levelUpText">升級到 Lv. 2!</div>
+        <div style="color: var(--text-primary); font-size: 2.5em; font-weight: bold; margin-bottom: 10px;" id="levelUpText"></div>
         <div style="color: var(--text-primary); font-size: 1.1em; font-style: italic;" id="levelUpMessage"></div>
     </div>
 
     <!-- 鬧鈴選擇 Modal -->
     <div id="alarmSelectionModal" class="alarm-selection-modal">
-        <h3 id="alarmSelectTitle">選擇鬧鈴聲音</h3>
+        <h3 id="alarmSelectTitle"></h3>
         <div id="alarmOptionsList"></div>
     </div>
 
     <!-- 任務拆分 Modal -->
     <div id="taskBreakdownModal" class="task-breakdown-modal">
-        <h3 id="taskBreakdownTitle">拆分任務</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 15px;" id="taskBreakdownDesc">將大任務拆成小步驟</p>
+        <h3 id="taskBreakdownTitle"></h3>
+        <p style="color: var(--text-secondary); margin-bottom: 15px;" id="taskBreakdownDesc"></p>
         <div class="task-step-input">
-            <input type="text" id="newStepInput" placeholder="輸入步驟..." style="width: 100%;">
+            <input type="text" id="newStepInput" placeholder="" style="width: 100%;">
             <button class="btn" onclick="addTaskStep();" style="padding: 10px 15px; margin: 0; width: auto;">➕</button>
         </div>
         <div class="task-step-list" id="taskStepsList"></div>
         <div class="modal-buttons">
-            <button class="btn" onclick="confirmTaskBreakdown();" id="confirmTaskBtn">確認分解</button>
-            <button class="btn btn-secondary" onclick="closeTaskBreakdown();" id="cancelTaskBtn">取消</button>
+            <button class="btn" onclick="confirmTaskBreakdown();" id="confirmTaskBtn"></button>
+            <button class="btn btn-secondary" onclick="closeTaskBreakdown();" id="cancelTaskBtn"></button>
         </div>
     </div>
 
     <!-- 接地練習 Modal -->
     <div id="groundingModal" class="modal-overlay">
         <div class="modal-content" style="min-width: 400px; text-align: center;">
-            <h3 id="groundingTitle">接地練習 (5-4-3-2-1)</h3>
+            <h3 id="groundingTitle"></h3>
             <div id="groundingContent" style="min-height: 150px; display: flex; align-items: center; justify-content: center;">
                 <p id="groundingStep" style="font-size: 1.2em; color: var(--accent-teal); font-weight: 600; white-space: pre-line;"></p>
             </div>
             <div class="modal-buttons">
-                <button class="btn" id="groundingNextBtn" onclick="nextGroundingStep()">下一步</button>
+                <button class="btn" id="groundingNextBtn" onclick="nextGroundingStep()"></button>
             </div>
         </div>
     </div>
@@ -751,11 +748,21 @@
     <!-- 認知重構結果 Modal -->
     <div id="cognitiveResultModal" class="modal-overlay">
         <div class="modal-content" style="min-width: 450px; text-align: left;">
-            <h3 id="cognitiveResultTitle">認知重構練習</h3>
+            <h3 id="cognitiveResultTitle"></h3>
             <div id="cognitiveResultBody" style="background: rgba(74, 144, 226, 0.1); padding: 20px; border-radius: 8px; margin: 20px 0;"></div>
             <div class="modal-buttons">
-                <button class="btn" onclick="closeCognitiveResultModal()">完成</button>
+                <button class="btn" id="closeCognitiveBtn" onclick="closeCognitiveResultModal()"></button>
             </div>
+        </div>
+    </div>
+
+    <!-- 認知重構輸入 Modal -->
+    <div id="customInputModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-secondary); padding: 30px; border-radius: 16px; border: 1px solid var(--accent-teal); text-align: center; z-index: 2001; min-width: 350px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+        <p style="color: var(--text-primary); margin-bottom: 15px;" id="customInputQuestion"></p>
+        <input type="text" id="customInputField" style="width: 100%; padding: 12px; border: 1px solid var(--accent-teal); border-radius: 8px; background: var(--bg-primary); color: var(--text-primary); margin-bottom: 15px;">
+        <div style="display: flex; gap: 10px;">
+            <button class="btn" onclick="submitCognitiveInput();" style="flex: 1; margin: 0;" id="submitCognitiveBtn"></button>
+            <button class="btn btn-secondary" onclick="closeCognitiveInputModal();" style="flex: 1; margin: 0;" id="cancelCognitiveBtn"></button>
         </div>
     </div>
 
@@ -766,14 +773,14 @@
                 <div class="home-header">
                     <h1>🧠 ADHD Focus Helper Pro Max</h1>
                     <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 15px;">ADHD 專注小助手 Pro Max</p>
-                    <p id="headerSubtitle">用溫暖的陪伴，打造屬於你的專注節奏</p>
+                    <p id="headerSubtitle"></p>
                 </div>
 
                 <!-- 進度追蹤卡片 -->
                 <div class="top-stats-card">
                     <div class="stat-mini">
                         <div class="stat-mini-value" id="topLevel">Lv. 1</div>
-                        <div class="stat-mini-label" id="levelLabel">Level</div>
+                        <div class="stat-mini-label" id="levelLabel"></div>
                     </div>
                     <div class="stat-mini">
                         <div class="stat-mini-value" id="topXp">0</div>
@@ -781,16 +788,16 @@
                     </div>
                     <div class="stat-mini">
                         <div class="stat-mini-value" id="topStreak">0</div>
-                        <div class="stat-mini-label" id="streakLabel">Consecutive Days</div>
+                        <div class="stat-mini-label" id="streakLabel"></div>
                     </div>
                     <div class="stat-mini">
                         <div class="stat-mini-value" id="topMinutes">0</div>
-                        <div class="stat-mini-label" id="minutesLabel">Breathing Minutes</div>
+                        <div class="stat-mini-label" id="minutesLabel"></div>
                     </div>
                 </div>
 
                 <div class="handwriting-note">
-                    <span id="usageNote">✍️ Tips: Use from top to bottom for best results. Each tool is customized for you.</span>
+                    <span id="usageNote"></span>
                 </div>
 
                 <div class="features-grid" id="featuresGrid">
@@ -798,77 +805,77 @@
                     <div class="feature-card" onclick="goToPage('assessmentPage')">
                         <div class="feature-number">1️⃣</div>
                         <div class="feature-icon">📋</div>
-                        <h3 id="f1Title">Quick Assessment</h3>
-                        <p id="f1Desc">Understand your focus state today. 10 simple questions help you know your rhythm.</p>
-                        <button class="feature-button" id="f1Btn">Start Assessment →</button>
+                        <h3 id="f1Title"></h3>
+                        <p id="f1Desc"></p>
+                        <button class="feature-button" id="f1Btn"></button>
                     </div>
 
                     <!-- 2. 能量檢測 -->
                     <div class="feature-card" onclick="goToPage('energyPage')">
                         <div class="feature-number">2️⃣</div>
                         <div class="feature-icon">⚡</div>
-                        <h3 id="f2Title">Energy Check</h3>
-                        <p id="f2Desc">Choose your energy level, get task recommendations. Thoughtful workload arrangement.</p>
-                        <button class="feature-button" id="f2Btn">Check Energy →</button>
+                        <h3 id="f2Title"></h3>
+                        <p id="f2Desc"></p>
+                        <button class="feature-button" id="f2Btn"></button>
                     </div>
 
                     <!-- 3. 日程安排 -->
                     <div class="feature-card" onclick="goToPage('routinePage')">
                         <div class="feature-number">3️⃣</div>
                         <div class="feature-icon">📅</div>
-                        <h3 id="f3Title">Daily Rituals</h3>
-                        <p id="f3Desc">Morning and evening gentle rituals. Build sustainable rhythm, one step at a time.</p>
-                        <button class="feature-button" id="f3Btn">Build Habits →</button>
+                        <h3 id="f3Title"></h3>
+                        <p id="f3Desc"></p>
+                        <button class="feature-button" id="f3Btn"></button>
                     </div>
 
                     <!-- 4. 任務管理 -->
                     <div class="feature-card" onclick="goToPage('taskPage')">
                         <div class="feature-number">4️⃣</div>
                         <div class="feature-icon">✅</div>
-                        <h3 id="f4Title">Task Management</h3>
-                        <p id="f4Desc">Break big tasks into small steps. Every check is your victory.</p>
-                        <button class="feature-button" id="f4Btn">Manage Tasks →</button>
+                        <h3 id="f4Title"></h3>
+                        <p id="f4Desc"></p>
+                        <button class="feature-button" id="f4Btn"></button>
                     </div>
 
                     <!-- 5. 番茄鐘 -->
                     <div class="feature-card" onclick="goToPage('timerPage')">
                         <div class="feature-number">5️⃣</div>
                         <div class="feature-icon">⏱️</div>
-                        <h3 id="f5Title">Pomodoro Timer</h3>
-                        <p id="f5Desc">Customizable focused time. Every second accumulates your achievements.</p>
-                        <button class="feature-button" id="f5Btn">Start Timer →</button>
+                        <h3 id="f5Title"></h3>
+                        <p id="f5Desc"></p>
+                        <button class="feature-button" id="f5Btn"></button>
                     </div>
 
                     <!-- 6. 療癒工具 -->
                     <div class="feature-card" onclick="goToPage('healingPage')">
                         <div class="feature-number">6️⃣</div>
                         <div class="feature-icon">🧘</div>
-                        <h3 id="f6Title">Healing Tools</h3>
-                        <p id="f6Desc">Mindful breathing, cognitive restructuring, grounding. Give yourself a hug when anxious.</p>
-                        <button class="feature-button" id="f6Btn">Find Calm →</button>
+                        <h3 id="f6Title"></h3>
+                        <p id="f6Desc"></p>
+                        <button class="feature-button" id="f6Btn"></button>
                     </div>
 
                     <!-- 7. 情緒日誌 -->
                     <div class="feature-card" onclick="goToPage('emotionPage')">
                         <div class="feature-number">7️⃣</div>
                         <div class="feature-icon">💭</div>
-                        <h3 id="f7Title">Emotion Journal</h3>
-                        <p id="f7Desc">Record every moment of emotion. Understanding yourself leads to better self-care.</p>
-                        <button class="feature-button" id="f7Btn">Record Emotion →</button>
+                        <h3 id="f7Title"></h3>
+                        <p id="f7Desc"></p>
+                        <button class="feature-button" id="f7Btn"></button>
                     </div>
 
                     <!-- 8. 飲食建議 -->
                     <div class="feature-card" onclick="goToPage('nutritionPage')">
                         <div class="feature-number">8️⃣</div>
                         <div class="feature-icon">🥗</div>
-                        <h3 id="f8Title">Nutrition Advice</h3>
-                        <p id="f8Desc">Nutrition plan tailored for ADHD. Right diet boosts focus and mood stability.</p>
-                        <button class="feature-button" id="f8Btn">Learn Nutrition →</button>
+                        <h3 id="f8Title"></h3>
+                        <p id="f8Desc"></p>
+                        <button class="feature-button" id="f8Btn"></button>
                     </div>
                 </div>
 
                 <div class="handwriting-note">
-                    💡 <span id="tipsNote">No need to complete everything at once. Choose the tools that help you most, start with small steps. Every choice is self-love.</span>
+                    💡 <span id="tipsNote"></span>
                 </div>
             </div>
         </div>
@@ -876,141 +883,140 @@
         <!-- ========== 評估頁面 ========== -->
         <div id="assessmentPage" class="page">
             <div class="nav-header" style="margin-top: 80px;">
-                <h2>📋 <span id="assessTitle">Quick Assessment</span></h2>
-                <button class="nav-back-btn" onclick="backToHomeFrom('assessmentPage')">← <span id="backBtn">Back to Home</span></button>
+                <h2>📋 <span id="assessTitle"></span></h2>
+                <button class="nav-back-btn" onclick="backToHomeFrom('assessmentPage')">← <span id="backBtn"></span></button>
             </div>
 
             <div class="section">
-                <h3 id="assessDesc1">Understand your focus state</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 20px;" id="assessDesc2">No perfect answers, only the real you. This assessment helps us understand your rhythm.</p>
+                <h3 id="assessDesc1"></h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;" id="assessDesc2"></p>
 
                 <div id="assessmentQuestions"></div>
 
-                <button class="btn" id="submitAssessmentBtn" onclick="submitAssessment();" style="margin-bottom: 20px;">Submit Assessment</button>
+                <button class="btn" id="submitAssessmentBtn" onclick="submitAssessment();" style="margin-bottom: 20px;"></button>
             </div>
 
-            <!-- 評估結果顯示區 -->
             <div id="assessmentResult" class="hidden"></div>
 
-            <!-- 評估專用：持久顯示鼓勵訊息 -->
             <div class="emotional-feedback positive" id="assessmentEmotionalMessage" style="display: none;">
                 <span class="feedback-icon">✨</span>
                 <span id="assessmentEmotionalText"></span>
             </div>
 
-            <!-- 共用情緒訊息（其他功能用） -->
             <div class="emotional-feedback positive" id="emotionalMessage" style="display: none;">
                 <span class="feedback-icon">✨</span>
                 <span id="emotionalText"></span>
             </div>
 
-            <!-- 評估報告（全部歷史 + 可刪除） -->
             <div class="section" id="assessmentReportSection" style="display: none; margin-top: 30px;">
-                <h3 id="reportTitle">📄 Assessment Report</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="reportTime">Assessment Time: </p>
+                <h3 id="reportTitle"></h3>
+                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="reportTime"></p>
                 <div id="reportContent" style="background: rgba(74, 144, 226, 0.08); padding: 15px; border-radius: 8px; margin: 15px 0;"></div>
 
-                <h3 style="margin-top:25px; font-size:1.2em;">Assessment History</h3>
+                <h3 style="margin-top:25px; font-size:1.2em;" id="historyTitle"></h3>
                 <div id="assessmentHistoryList" style="margin-top:10px;"></div>
                 
                 <div style="background: rgba(217, 122, 147, 0.1); border-left: 4px solid var(--accent-rose); padding: 15px; border-radius: 8px; margin: 15px 0;">
-                    <p style="color: var(--text-secondary); font-size: 0.9em; margin: 0;" id="emailWarning">⚠️ Important: All records are stored only on this device. To save a report copy via email, enter your email address. The system will open your mail app where you can send or copy to clipboard.</p>
+                    <p style="color: var(--text-secondary); font-size: 0.9em; margin: 0;" id="emailWarning"></p>
                 </div>
 
                 <div style="display: flex; gap: 10px; margin: 15px 0;">
-                    <input type="email" id="emailInput" placeholder="Enter your email" style="flex: 1; padding: 12px; border: 1px solid var(--accent-teal); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
-                    <button class="btn" onclick="sendReportToEmail();">📧 Send Report</button>
+                    <input type="email" id="emailInput" placeholder="" style="flex: 1; padding: 12px; border: 1px solid var(--accent-teal); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                    <button class="btn" onclick="sendReportToEmail();" id="sendReportBtn">📧</button>
                 </div>
 
-                <button class="nav-back-btn" onclick="backToHomeFrom('assessmentPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn">Back to Home</span></button>
+                <button class="nav-back-btn" onclick="backToHomeFrom('assessmentPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn"></span></button>
             </div>
         </div>
 
         <!-- ========== 能量檢測頁面 ========== -->
         <div id="energyPage" class="page">
             <div class="nav-header" style="margin-top: 80px;">
-                <h2>⚡ <span id="energyTitle">Energy Check</span></h2>
-                <button class="nav-back-btn" onclick="backToHomeFrom('energyPage')">← <span id="backBtn2">Back to Home</span></button>
+                <h2>⚡ <span id="energyTitle"></span></h2>
+                <button class="nav-back-btn" onclick="backToHomeFrom('energyPage')">← <span id="backBtn2"></span></button>
             </div>
 
             <div class="section">
-                <h3 id="energyQuestion">What's your energy level right now?</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 20px;" id="energyDesc">Based on your energy, we recommend suitable task difficulty.</p>
+                <h3 id="energyQuestion"></h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;" id="energyDesc"></p>
 
                 <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 30px 0;">
                     <div style="text-align: center;">
-                        <button class="btn energy-btn" id="energyBtn1" onclick="setEnergy(1)" style="width: 100%; padding: 20px; transition: all 0.3s ease;">🔴<br><span id="energyLabel1">Very Low</span></button>
+                        <button class="btn energy-btn" id="energyBtn1" onclick="setEnergy(1)" style="width: 100%; padding: 20px; transition: all 0.3s ease;">🔴<br><span id="energyLabel1"></span></button>
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-secondary energy-btn" id="energyBtn2" onclick="setEnergy(2)" style="width: 100%; padding: 20px; transition: all 0.3s ease;">🟡<br><span id="energyLabel2">Low</span></button>
+                        <button class="btn btn-secondary energy-btn" id="energyBtn2" onclick="setEnergy(2)" style="width: 100%; padding: 20px; transition: all 0.3s ease;">🟡<br><span id="energyLabel2"></span></button>
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-secondary energy-btn" id="energyBtn3" onclick="setEnergy(3)" style="width: 100%; padding: 20px; transition: all 0.3s ease;">🟢<br><span id="energyLabel3">Medium</span></button>
+                        <button class="btn btn-secondary energy-btn" id="energyBtn3" onclick="setEnergy(3)" style="width: 100%; padding: 20px; transition: all 0.3s ease;">🟢<br><span id="energyLabel3"></span></button>
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-secondary energy-btn" id="energyBtn4" onclick="setEnergy(4)" style="width: 100%; padding: 20px; transition: all 0.3s ease;">💚<br><span id="energyLabel4">Sufficient</span></button>
+                        <button class="btn btn-secondary energy-btn" id="energyBtn4" onclick="setEnergy(4)" style="width: 100%; padding: 20px; transition: all 0.3s ease;">💚<br><span id="energyLabel4"></span></button>
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-secondary energy-btn" id="energyBtn5" onclick="setEnergy(5)" style="width: 100%; padding: 20px; transition: all 0.3s ease;">✨<br><span id="energyLabel5">Peak</span></button>
+                        <button class="btn btn-secondary energy-btn" id="energyBtn5" onclick="setEnergy(5)" style="width: 100%; padding: 20px; transition: all 0.3s ease;">✨<br><span id="energyLabel5"></span></button>
                     </div>
                 </div>
 
                 <div id="energyRecommendation" class="skill-card" style="display: none;"></div>
             </div>
 
-            <button class="nav-back-btn" onclick="backToHomeFrom('energyPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn2">Back to Home</span></button>
+            <button class="nav-back-btn" onclick="backToHomeFrom('energyPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn2"></span></button>
         </div>
 
         <!-- ========== 日程安排頁面 ========== -->
         <div id="routinePage" class="page">
             <div class="nav-header">
-                <h2>📅 <span id="routineTitle">Daily Rituals</span></h2>
-                <button class="nav-back-btn" onclick="backToHomeFrom('routinePage')">← <span id="backBtn3">Back to Home</span></button>
+                <h2>📅 <span id="routineTitle"></span></h2>
+                <button class="nav-back-btn" onclick="backToHomeFrom('routinePage')">← <span id="backBtn3"></span></button>
             </div>
 
             <div class="section">
-                <h3>🌅 <span id="morningLabel">Morning Ritual</span></h3>
-                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="morningDesc">Gently start your day</p>
+                <h3>🌅 <span id="morningLabel"></span></h3>
+                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="morningDesc"></p>
                 <div id="morningRoutine"></div>
 
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <input type="text" id="newMorningInput" placeholder="Add a morning ritual..." style="flex: 1; padding: 10px; border: 1px solid var(--accent-teal); border-radius: 6px; background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9em;">
+                    <input type="text" id="newMorningInput" placeholder="" style="flex: 1; padding: 10px; border: 1px solid var(--accent-teal); border-radius: 6px; background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9em;">
                     <button class="btn" onclick="addMorningRoutine();" style="padding: 10px 15px; margin: 0; font-size: 0.9em;">➕</button>
                 </div>
             </div>
 
             <div class="section">
-                <h3>🌙 <span id="eveningLabel">Evening Ritual</span></h3>
-                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="eveningDesc">Gently guide you into night</p>
+                <h3>🌙 <span id="eveningLabel"></span></h3>
+                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="eveningDesc"></p>
                 <div id="eveningRoutine"></div>
 
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <input type="text" id="newEveningInput" placeholder="Add an evening ritual..." style="flex: 1; padding: 10px; border: 1px solid var(--accent-teal); border-radius: 6px; background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9em;">
+                    <input type="text" id="newEveningInput" placeholder="" style="flex: 1; padding: 10px; border: 1px solid var(--accent-teal); border-radius: 6px; background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9em;">
                     <button class="btn" onclick="addEveningRoutine();" style="padding: 10px 15px; margin: 0; font-size: 0.9em;">➕</button>
                 </div>
             </div>
 
             <div class="emotional-feedback encouraging" id="routineMessage">
                 <span class="feedback-icon">💜</span>
-                <span id="routineMessageText">These aren't tasks, they're dates with yourself. Every step cares for you.</span>
+                <span id="routineMessageText"></span>
             </div>
 
-            <button class="nav-back-btn" onclick="backToHomeFrom('routinePage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn3">Back to Home</span></button>
+            <button class="nav-back-btn" onclick="backToHomeFrom('routinePage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn3"></span></button>
         </div>
 
         <!-- ========== 任務管理頁面 ========== -->
         <div id="taskPage" class="page">
             <div class="nav-header">
-                <h2>✅ <span id="taskTitle">Task Management</span></h2>
-                <button class="nav-back-btn" onclick="backToHomeFrom('taskPage')">← <span id="backBtn4">Back to Home</span></button>
+                <h2>✅ <span id="taskTitle"></span></h2>
+                <button class="nav-back-btn" onclick="backToHomeFrom('taskPage')">← <span id="backBtn4"></span></button>
             </div>
 
             <div class="section">
-                <h3 id="taskDesc1">Break big goals into small steps</h3>
+                <h3 id="taskDesc1"></h3>
                 <div style="display: flex; gap: 10px; margin: 20px 0;">
-                    <input type="text" id="newTaskInput" placeholder="Example: Complete report, learn new skills..." style="flex: 1; padding: 12px; border: 1px solid var(--accent-teal); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
-                    <button class="btn" onclick="addTask();" style="margin: 0;">Add</button>
-                    <button class="btn btn-secondary" id="breakdownTaskBtn" onclick="openTaskBreakdown();" style="margin: 0;">📊 Breakdown</button>
+                    <input type="text" id="newTaskInput" placeholder="" style="flex: 1; padding: 12px; border: 1px solid var(--accent-teal); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                    <button class="btn" onclick="addTask();" style="margin: 0;" id="addTaskBtn"></button>
+                    <button class="btn btn-secondary" id="breakdownTaskBtn" onclick="openTaskBreakdown();" style="margin: 0; display: flex; align-items: center; justify-content: center; gap: 6px;" title="將任務拆成小步驟">
+                        <span style="font-size: 1.2em;">📊</span>
+                        <span id="breakdownBtn"></span>
+                    </button>
                 </div>
 
                 <div id="taskList"></div>
@@ -1024,32 +1030,32 @@
                 <span id="taskFeedbackText"></span>
             </div>
 
-            <button class="nav-back-btn" onclick="backToHomeFrom('taskPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn4">Back to Home</span></button>
+            <button class="nav-back-btn" onclick="backToHomeFrom('taskPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn4"></span></button>
         </div>
 
         <!-- ========== 番茄鐘頁面 ========== -->
         <div id="timerPage" class="page">
             <div class="nav-header">
-                <h2>⏱️ <span id="timerTitle">Pomodoro Timer</span></h2>
-                <button class="nav-back-btn" onclick="backToHomeFrom('timerPage')">← <span id="backBtn5">Back to Home</span></button>
+                <h2>⏱️ <span id="timerTitle"></span></h2>
+                <button class="nav-back-btn" onclick="backToHomeFrom('timerPage')">← <span id="backBtn5"></span></button>
             </div>
 
             <div class="section">
-                <h3 id="timerDesc1">Customizable focused time</h3>
+                <h3 id="timerDesc1"></h3>
                 
                 <div style="display: flex; gap: 12px; margin: 20px 0; align-items: center; justify-content: center; flex-wrap: wrap;">
-                    <label style="color: var(--text-secondary);" id="timerMinLabel">Minutes:</label>
+                    <label style="color: var(--text-secondary);" id="timerMinLabel"></label>
                     <input type="number" id="timerMinutes" min="1" max="60" value="25" style="width: 80px; padding: 10px; border: 1px solid var(--accent-teal); border-radius: 6px; background: var(--bg-secondary); color: var(--text-primary); text-align: center; font-size: 1em; font-weight: bold;">
-                    <button class="btn btn-secondary" onclick="resetTimerInput();" style="padding: 10px 15px; margin: 0;" id="resetTimerBtn">Reset</button>
-                    <button class="btn btn-secondary" onclick="openAlarmSelection();" style="padding: 10px 15px; margin: 0;">🔔 Alarm</button>
-                    <button class="btn btn-secondary" onclick="testAlarmSound();" style="padding: 10px 15px; margin: 0;">🔊 Test</button>
+                    <button class="btn btn-secondary" onclick="resetTimerInput();" style="padding: 10px 15px; margin: 0;" id="resetTimerBtn"></button>
+                    <button class="btn btn-secondary" onclick="openAlarmSelection();" style="padding: 10px 15px; margin: 0;" id="alarmBtn">🔔</button>
+                    <button class="btn btn-secondary" onclick="testAlarmSound();" style="padding: 10px 15px; margin: 0;" id="testAlarmBtn">🔊</button>
                     <input type="range" id="volumeSlider" min="0" max="100" value="70" style="width: 100px; margin: 0 10px;">
                 </div>
 
                 <div class="timer-display" id="timerDisplay">25:00</div>
                 <div style="text-align: center; margin: 30px 0;">
-                    <button class="btn" id="startTimerBtn" onclick="startTimer();">Start Timer</button>
-                    <button class="btn btn-secondary hidden" id="stopTimerBtn" onclick="stopTimer();">Stop Timer</button>
+                    <button class="btn" id="startTimerBtn" onclick="startTimer();"></button>
+                    <button class="btn btn-secondary hidden" id="stopTimerBtn" onclick="stopTimer();"></button>
                 </div>
 
                 <div class="progress-bar">
@@ -1059,109 +1065,109 @@
                 <div id="timerMessage" style="display: none; margin-top: 20px;"></div>
             </div>
 
-            <button class="nav-back-btn" onclick="backToHomeFrom('timerPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn5">Back to Home</span></button>
+            <button class="nav-back-btn" onclick="backToHomeFrom('timerPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn5"></span></button>
         </div>
 
         <!-- ========== 療癒工具頁面 ========== -->
         <div id="healingPage" class="page">
             <div class="nav-header" style="margin-top: 80px;">
-                <h2>🧘 <span id="healingTitle">Healing Tools</span></h2>
-                <button class="nav-back-btn" onclick="backToHomeFrom('healingPage')">← <span id="backBtn6">Back to Home</span></button>
+                <h2>🧘 <span id="healingTitle"></span></h2>
+                <button class="nav-back-btn" onclick="backToHomeFrom('healingPage')">← <span id="backBtn6"></span></button>
             </div>
 
             <div class="section">
-                <h3 id="breathingTitle">Mindful Breathing</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 20px;" id="breathingDesc">When anxious, breathing is the best comfort. Visualize your breathing cycle to regulate your nervous system and reduce stress.</p>
+                <h3 id="breathingTitle"></h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;" id="breathingDesc"></p>
                 <div style="text-align: center; margin: 40px 0;">
                     <div id="breathingCircle" class="breathing-circle" onclick="toggleBreathing();">
-                        <div class="breathing-text" id="breathText">Click to Start<br>Breathing</div>
+                        <div class="breathing-text" id="breathText"></div>
                     </div>
                 </div>
             </div>
 
             <div class="section">
-                <h3 id="cognitiveTitle">Cognitive Restructuring</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="cognitiveDesc">Transform negative thoughts into strength.</p>
-                <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9em;" id="cognitiveScience">🧠 Scientific Basis: Cognitive restructuring is core to CBT. Research shows that identifying and challenging inaccurate beliefs significantly improves anxiety, depression, and overthinking. This practice helps break negative thought cycles and build healthier mental patterns.</p>
-                <button class="btn" onclick="openCognitiveRestructuring();" id="cognitiveBtn">Start Practice</button>
+                <h3 id="cognitiveTitle"></h3>
+                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="cognitiveDesc"></p>
+                <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9em;" id="cognitiveScience"></p>
+                <button class="btn" onclick="openCognitiveRestructuring();" id="cognitiveBtn"></button>
             </div>
 
             <div class="section">
-                <h3 id="groundingTitle">Grounding (5-4-3-2-1)</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="groundingDesc">Feel the present, return to now.</p>
-                <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9em;" id="groundingScience">🧠 Scientific Basis: The 5-4-3-2-1 grounding technique is a sensory redirection method that activates your parasympathetic nervous system through five senses, counteracting anxiety-induced fight-or-flight response. This technique helps return you to the present within seconds.</p>
-                <button class="btn" onclick="startGrounding();" id="groundingBtn">Start Grounding</button>
+                <h3 id="groundingTitle"></h3>
+                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="groundingDesc"></p>
+                <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9em;" id="groundingScience"></p>
+                <button class="btn" onclick="startGrounding();" id="groundingBtn"></button>
             </div>
 
-            <button class="nav-back-btn" onclick="backToHomeFrom('healingPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn6">Back to Home</span></button>
+            <button class="nav-back-btn" onclick="backToHomeFrom('healingPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn6"></span></button>
         </div>
 
         <!-- ========== 情緒日誌頁面 ========== -->
         <div id="emotionPage" class="page">
             <div class="nav-header">
-                <h2>💭 <span id="emotionTitle">Emotion Journal</span></h2>
-                <button class="nav-back-btn" onclick="backToHomeFrom('emotionPage')">← <span id="backBtn7">Back to Home</span></button>
+                <h2>💭 <span id="emotionTitle"></span></h2>
+                <button class="nav-back-btn" onclick="backToHomeFrom('emotionPage')">← <span id="backBtn7"></span></button>
             </div>
 
             <div class="section">
-                <h3 id="emotionLogTitle">Record your current emotion</h3>
+                <h3 id="emotionLogTitle"></h3>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0;">
-                    <button class="btn" onclick="logEmotion('happy');" id="emotionBtn1">😊 Happy</button>
-                    <button class="btn" onclick="logEmotion('calm');" id="emotionBtn2">😌 Calm</button>
-                    <button class="btn" onclick="logEmotion('sad');" id="emotionBtn3">😢 Sad</button>
-                    <button class="btn" onclick="logEmotion('anxious');" id="emotionBtn4">😰 Anxious</button>
+                    <button class="btn" onclick="logEmotion('happy');" id="emotionBtn1"></button>
+                    <button class="btn" onclick="logEmotion('calm');" id="emotionBtn2"></button>
+                    <button class="btn" onclick="logEmotion('sad');" id="emotionBtn3"></button>
+                    <button class="btn" onclick="logEmotion('anxious');" id="emotionBtn4"></button>
                 </div>
 
                 <div id="emotionLog" style="margin-top: 30px;"></div>
             </div>
 
             <div class="section" id="emotionReportSection" style="margin-top: 30px;">
-                <h3 id="emotionReportTitle">📊 Complete Report</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="emotionReportDesc">Send complete report with all achievements to your email</p>
+                <h3 id="emotionReportTitle"></h3>
+                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="emotionReportDesc"></p>
                 
                 <div style="display: flex; gap: 10px; margin: 15px 0;">
-                    <input type="email" id="emotionEmailInput" placeholder="Enter your email" style="flex: 1; padding: 12px; border: 1px solid var(--accent-teal); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
-                    <button class="btn" onclick="sendCompletedReportToEmail();">📧 Send Report</button>
+                    <input type="email" id="emotionEmailInput" placeholder="" style="flex: 1; padding: 12px; border: 1px solid var(--accent-teal); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                    <button class="btn" onclick="sendCompletedReportToEmail();" id="sendEmotionReportBtn">📧</button>
                 </div>
             </div>
 
-            <button class="nav-back-btn" onclick="backToHomeFrom('emotionPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn7">Back to Home</span></button>
+            <button class="nav-back-btn" onclick="backToHomeFrom('emotionPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn7"></span></button>
         </div>
 
         <!-- ========== 飲食建議頁面 ========== -->
         <div id="nutritionPage" class="page">
             <div class="nav-header" style="margin-top: 80px;">
-                <h2>🥗 <span id="nutritionTitle">Nutrition Advice</span></h2>
-                <button class="nav-back-btn" onclick="backToHomeFrom('nutritionPage')">← <span id="backBtn8">Back to Home</span></button>
+                <h2>🥗 <span id="nutritionTitle"></span></h2>
+                <button class="nav-back-btn" onclick="backToHomeFrom('nutritionPage')">← <span id="backBtn8"></span></button>
             </div>
 
             <div class="section">
-                <h3 id="nutritionDesc">Nutrition plan tailored for ADHD</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 20px;" id="nutritionIntro">Based on 2026 latest US dietary guidelines, these nutrition tips help improve focus and emotional stability.</p>
+                <h3 id="nutritionDesc"></h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;" id="nutritionIntro"></p>
             </div>
 
             <div class="section">
-                <h3 id="nutritionSection1">🧠 Priority Nutrients</h3>
+                <h3 id="nutritionSection1"></h3>
                 <div id="nutritionPriority"></div>
             </div>
 
             <div class="section">
-                <h3 id="nutritionSection2">🍽️ Eating Order Recommendation</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="eatingOrderDesc">Combat blood sugar crashes, stabilize glucose:</p>
+                <h3 id="nutritionSection2"></h3>
+                <p style="color: var(--text-secondary); margin-bottom: 15px;" id="eatingOrderDesc"></p>
                 <div id="eatingOrder"></div>
             </div>
 
             <div class="section">
-                <h3 id="nutritionSection3">❌ Foods to Avoid</h3>
+                <h3 id="nutritionSection3"></h3>
                 <div id="nutritionAvoid"></div>
             </div>
 
             <div class="emotional-feedback positive">
                 <span class="feedback-icon">💚</span>
-                <span id="nutritionMessage">Proper nutrition is the first step to self-care. Every nutrition choice helps you focus.</span>
+                <span id="nutritionMessage"></span>
             </div>
 
-            <button class="nav-back-btn" onclick="backToHomeFrom('nutritionPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn8">Back to Home</span></button>
+            <button class="nav-back-btn" onclick="backToHomeFrom('nutritionPage')" style="width: 100%; text-align: center; margin: 20px 0;">← <span id="bottomBackBtn8"></span></button>
         </div>
     </div>
 
@@ -1169,26 +1175,26 @@
         // ========== 配置 ==========
         const emotionalMessages = {
             assessment: [
-                "✨ Today's state is a bit distracted, but this is common, doesn't mean you're not trying hard enough",
-                "🌟 You just completed something difficult, even just 10 minutes counts as moving forward",
-                "💫 Day 1, I'm here with you",
-                "🌈 Today's not perfect, and that's okay"
+                { zh: "✨ 今天的狀態有點分心，但這很常見，不代表你不夠努力", en: "✨ Today's state is a bit distracted, but this is common, it doesn't mean you're not trying hard enough" },
+                { zh: "🌟 你剛剛完成了一件不容易的事，就算只有 10 分鐘，也算前進", en: "🌟 You just completed something difficult, even if just 10 minutes, that's progress" },
+                { zh: "💫 第 1 天，我陪你開始", en: "💫 Day 1, I'm here with you" },
+                { zh: "🌈 今天不完美，也沒有關係", en: "🌈 Today's not perfect, and that's okay" }
             ],
             completion: [
-                "🎉 You did it! This is what growth looks like",
-                "✨ Every check is your victory",
-                "💚 You're taking care of yourself, that's important",
-                "🌟 Today's you is stronger than yesterday's you"
+                { zh: "🎉 你做到了！這就是成長的樣子", en: "🎉 You did it! This is what growth looks like" },
+                { zh: "✨ 每一個勾選都是你的勝利", en: "✨ Every check is your victory" },
+                { zh: "💚 你在照顧自己，這很重要", en: "💚 You're taking care of yourself, that's important" },
+                { zh: "🌟 今天的你比昨天更強大", en: "🌟 Today's you is stronger than yesterday's you" }
             ],
             levelUp: [
-                "🌟 You leveled up! Every step is progress",
-                "🚀 Congratulations! Your persistence is shining",
-                "💫 Awesome! You're getting stronger",
-                "✨ Level up! You did great"
+                { zh: "🌟 你升級了！每一步都在進步", en: "🌟 You leveled up! Every step is progress" },
+                { zh: "🚀 恭喜升級！你的堅持在發光", en: "🚀 Congratulations! Your persistence is shining" },
+                { zh: "💫 太棒了！你正在變強", en: "💫 Awesome! You're getting stronger" },
+                { zh: "✨ 升級成功！你做得非常好", en: "✨ Level up! You did great" }
             ]
         };
 
-        // 中英文翻譯
+        // 中英文翻譯完整版
         const translations = {
             zh: {
                 levelLabel: "等級",
@@ -1197,22 +1203,43 @@
                 minutesLabel: "總正念呼吸分鐘數",
                 headerSubtitle: "用溫暖的陪伴，打造屬於你的專注節奏",
                 usageNote: "✍️ 使用建議：從上到下依序使用效果最佳。每個工具都是為你量身打造的陪伴者。",
-                tipsNote: "小貼士：不需要一次全部完成。選擇對你最有幫助的工具，從小步驟開始。每一個選擇都是對自己的愛。",
-                f1Title: "快速評估", f1Desc: "了解今天的專注狀態。10道簡單問題，幫助你認識自己的節奏。", f1Btn: "開始評估 →",
-                f2Title: "能量檢測", f2Desc: "選擇你的能量狀態，系統推薦合適的任務難度。貼心的工作負載安排。", f2Btn: "檢測能量 →",
-                f3Title: "每日小事", f3Desc: "早晨和傍晚的溫和儀式。建立可持續的節奏，一步一步邁向目標。", f3Btn: "建立習慣 →",
-                f4Title: "任務管理", f4Desc: "把大任務拆成小步驟。每個勾選都是你的勝利。", f4Btn: "管理任務 →",
-                f5Title: "番茄鐘", f5Desc: "自訂時間的專注時光。每一秒都在累積你的成就。", f5Btn: "開始計時 →",
-                f6Title: "療癒工具", f6Desc: "正念呼吸、認知重構、接地練習。在焦慮時，給自己一個擁抱。", f6Btn: "找回平靜 →",
-                f7Title: "情緒日誌", f7Desc: "記錄每一刻的情緒。理解自己，才能更好地照顧自己。", f7Btn: "記錄情緒 →",
-                f8Title: "飲食建議", f8Desc: "為ADHD量身打造的營養方案。正確的飲食能提升專注力和穩定情緒。", f8Btn: "了解飲食 →",
+                tipsNote: "不需要一次全部完成。選擇對你最有幫助的工具，從小步驟開始。每一個選擇都是對自己的愛。",
+                f1Title: "快速評估", 
+                f1Desc: "了解今天的專注狀態。10道簡單問題，幫助你認識自己的節奏。", 
+                f1Btn: "開始評估 →",
+                f2Title: "能量檢測", 
+                f2Desc: "選擇你的能量狀態，系統推薦合適的任務難度。貼心的工作負載安排。", 
+                f2Btn: "檢測能量 →",
+                f3Title: "每日小事", 
+                f3Desc: "早晨和傍晚的溫和儀式。建立可持續的節奏，一步一步邁向目標。", 
+                f3Btn: "建立習慣 →",
+                f4Title: "任務管理", 
+                f4Desc: "把大任務拆成小步驟。每個勾選都是你的勝利。", 
+                f4Btn: "管理任務 →",
+                f5Title: "番茄鐘", 
+                f5Desc: "自訂時間的專注時光。每一秒都在累積你的成就。", 
+                f5Btn: "開始計時 →",
+                f6Title: "療癒工具", 
+                f6Desc: "正念呼吸、認知重構、接地練習。在焦慮時，給自己一個擁抱。", 
+                f6Btn: "找回平靜 →",
+                f7Title: "情緒日誌", 
+                f7Desc: "記錄每一刻的情緒。理解自己，才能更好地照顧自己。", 
+                f7Btn: "記錄情緒 →",
+                f8Title: "飲食建議", 
+                f8Desc: "為ADHD量身打造的營養方案。正確的飲食能提升專注力和穩定情緒。", 
+                f8Btn: "了解飲食 →",
                 assessTitle: "快速評估",
                 assessDesc1: "了解你的專注狀態",
                 assessDesc2: "沒有完美的回答，只有真實的你。這份評估幫助我們更了解你的節奏。",
+                submitAssessmentBtn: "提交評估",
                 energyTitle: "能量檢測",
                 energyQuestion: "你現在的能量如何？",
                 energyDesc: "根據你的能量狀態，我們會推薦合適的任務難度。",
-                energyLabel1: "超低", energyLabel2: "較低", energyLabel3: "中等", energyLabel4: "充足", energyLabel5: "爆棚",
+                energyLabel1: "超低", 
+                energyLabel2: "較低", 
+                energyLabel3: "中等", 
+                energyLabel4: "充足", 
+                energyLabel5: "爆棚",
                 routineTitle: "每日小事",
                 morningLabel: "早晨儀式",
                 morningDesc: "溫和地開啟你的一天",
@@ -1221,25 +1248,43 @@
                 routineMessageText: "這些不是任務，而是和自己的約會。每一步都在照顧你。",
                 taskTitle: "任務管理",
                 taskDesc1: "把大目標拆成小步驟",
+                addTaskBtn: "添加",
+                breakdownBtn: "拆分",
                 timerTitle: "番茄鐘",
                 timerDesc1: "自訂時間的專注時光",
                 timerMinLabel: "分鐘:",
+                resetTimerBtn: "重置",
+                startTimerBtn: "開始計時",
+                stopTimerBtn: "停止計時",
                 healingTitle: "療癒工具",
                 breathingTitle: "正念呼吸",
                 breathingDesc: "在焦慮時，呼吸就是最好的安撫。透過視覺化呼吸循環，幫助你調節神經系統，減少壓力和焦慮。",
+                breathingStart: "點擊開始\n呼吸練習",
+                breathingRelax: "跟著圓形呼吸\n完全放鬆",
                 cognitiveTitle: "認知重構練習",
                 cognitiveDesc: "把負面想法重塑成力量。",
                 cognitiveScience: "🧠 科學基礎：認知重構是認知行為療法(CBT)的核心技術。研究表明，透過識別和挑戰不準確的信念，可以顯著改善焦慮、抑鬱和過度思考。這項練習幫助你打破負面思維循環，建立更健康的心理模式。",
+                cognitiveBtn: "開始練習",
                 groundingTitle: "接地練習 (5-4-3-2-1)",
                 groundingDesc: "感受當下，回到此刻。",
                 groundingScience: "🧠 科學基礎：5-4-3-2-1 接地練習是一種感官重定向技術，透過運用你的五種感官，能迅速啟動副交感神經系統，從而抵抗焦慮引發的「戰鬥或逃避」反應。這個技巧在數秒內就能幫助你回到現在的時刻。",
+                groundingBtn: "開始接地",
                 emotionTitle: "情緒日誌",
                 emotionLogTitle: "記錄此刻的情緒",
+                emotionBtn1: "😊 開心",
+                emotionBtn2: "😌 平靜",
+                emotionBtn3: "😢 難過",
+                emotionBtn4: "😰 焦慮",
                 backBtn: "返回首頁",
                 reportTitle: "📄 評估報告",
+                historyTitle: "歷次評估記錄",
                 emailWarning: "⚠️ 重要提示：當前所有紀錄只會儲存在此裝置。如需在電子郵件保存報告副本，請輸入您的郵件地址並發送報告。系統會自動開啟您的郵件應用程式，您可以手動發送或將報告複製到剪貼板。",
+                emailPlaceholder: "輸入您的郵箱",
+                sendReportBtn: "發送報告",
                 emotionReportTitle: "📊 完整報告",
                 emotionReportDesc: "發送包含所有成就資料的完整報告到您的郵箱",
+                emotionEmailPlaceholder: "輸入您的郵箱",
+                sendEmotionReportBtn: "發送報告",
                 nutritionTitle: "飲食建議",
                 nutritionDesc: "為ADHD量身打造的營養方案",
                 nutritionIntro: "根據2026年美國最新飲食指南，以下營養建議能幫助改善專注力和情緒穩定。",
@@ -1250,8 +1295,32 @@
                 nutritionMessage: "正確的飲食是照顧自己的第一步。每一個營養選擇都在幫助你專注。",
                 taskBreakdownTitle: "拆分任務",
                 taskBreakdownDesc: "將大任務拆成小步驟",
+                newStepPlaceholder: "輸入步驟...",
                 confirmTaskBtn: "確認分解",
-                cancelTaskBtn: "取消"
+                cancelTaskBtn: "取消",
+                alarmSelectTitle: "選擇鬧鈴聲音",
+                groundingTitleModal: "接地練習 (5-4-3-2-1)",
+                cognitiveResultTitle: "認知重構練習",
+                closeCognitiveBtn: "完成",
+                customInputQuestion: "告訴我，你現在的負面想法是什麼？",
+                submitCognitiveBtn: "確認",
+                cancelCognitiveBtn: "取消",
+                deleteBtnText: "刪除",
+                noEmotionText: "還沒有記錄。開始記錄你的情緒吧！",
+                noTaskText: "還沒有任務。添加第一個吧！",
+                noHistoryText: "目前尚無評估記錄。",
+                deleteText: "刪除",
+                groundingCompleteMsg: "🌍 接地完成！\n\n你已經回到此刻。感受你的呼吸，感受身體與地面的連結。你很安全。",
+                nextBtn: "下一步",
+                completeBtn: "完成",
+                breatingDoneMsg: "😌 你做得很好",
+                inhalation: "吸氣...",
+                hold: "屏氣...",
+                exhalation: "呼氣...",
+                doneMsg: "完成了！休息一下吧",
+                emotionTime: "時間",
+                emailInputPlaceholder: "輸入您的郵箱",
+                noAssessmentText: "目前還沒有歷史評估記錄。"
             },
             en: {
                 levelLabel: "Level",
@@ -1261,21 +1330,42 @@
                 headerSubtitle: "Cultivate your focus rhythm with warm support",
                 usageNote: "✍️ Tips: Use from top to bottom for best results. Each tool is customized for you.",
                 tipsNote: "No need to complete everything at once. Choose the tools that help you most, start with small steps. Every choice is self-love.",
-                f1Title: "Quick Assessment", f1Desc: "Understand your focus state today. 10 simple questions help you know your rhythm.", f1Btn: "Start Assessment →",
-                f2Title: "Energy Check", f2Desc: "Choose your energy level, get task recommendations. Thoughtful workload arrangement.", f2Btn: "Check Energy →",
-                f3Title: "Daily Rituals", f3Desc: "Morning and evening gentle rituals. Build sustainable rhythm, one step at a time.", f3Btn: "Build Habits →",
-                f4Title: "Task Management", f4Desc: "Break big tasks into small steps. Every check is your victory.", f4Btn: "Manage Tasks →",
-                f5Title: "Pomodoro Timer", f5Desc: "Customizable focused time. Every second accumulates your achievements.", f5Btn: "Start Timer →",
-                f6Title: "Healing Tools", f6Desc: "Mindful breathing, cognitive restructuring, grounding. Give yourself a hug when anxious.", f6Btn: "Find Calm →",
-                f7Title: "Emotion Journal", f7Desc: "Record every moment of emotion. Understanding yourself leads to better self-care.", f7Btn: "Record Emotion →",
-                f8Title: "Nutrition Advice", f8Desc: "Nutrition plan tailored for ADHD. Right diet boosts focus and mood stability.", f8Btn: "Learn Nutrition →",
+                f1Title: "Quick Assessment", 
+                f1Desc: "Understand your focus state today. 10 simple questions help you know your rhythm.", 
+                f1Btn: "Start Assessment →",
+                f2Title: "Energy Check", 
+                f2Desc: "Choose your energy level, get task recommendations. Thoughtful workload arrangement.", 
+                f2Btn: "Check Energy →",
+                f3Title: "Daily Rituals", 
+                f3Desc: "Morning and evening gentle rituals. Build sustainable rhythm, one step at a time.", 
+                f3Btn: "Build Habits →",
+                f4Title: "Task Management", 
+                f4Desc: "Break big tasks into small steps. Every check is your victory.", 
+                f4Btn: "Manage Tasks →",
+                f5Title: "Pomodoro Timer", 
+                f5Desc: "Customizable focused time. Every second accumulates your achievements.", 
+                f5Btn: "Start Timer →",
+                f6Title: "Healing Tools", 
+                f6Desc: "Mindful breathing, cognitive restructuring, grounding. Give yourself a hug when anxious.", 
+                f6Btn: "Find Calm →",
+                f7Title: "Emotion Journal", 
+                f7Desc: "Record every moment of emotion. Understanding yourself leads to better self-care.", 
+                f7Btn: "Record Emotion →",
+                f8Title: "Nutrition Advice", 
+                f8Desc: "Nutrition plan tailored for ADHD. Right diet boosts focus and mood stability.", 
+                f8Btn: "Learn Nutrition →",
                 assessTitle: "Quick Assessment",
                 assessDesc1: "Understand your focus state",
                 assessDesc2: "No perfect answers, only the real you. This assessment helps us understand your rhythm.",
+                submitAssessmentBtn: "Submit Assessment",
                 energyTitle: "Energy Check",
                 energyQuestion: "What's your energy level right now?",
                 energyDesc: "Based on your energy, we recommend suitable task difficulty.",
-                energyLabel1: "Very Low", energyLabel2: "Low", energyLabel3: "Medium", energyLabel4: "Sufficient", energyLabel5: "Peak",
+                energyLabel1: "Very Low", 
+                energyLabel2: "Low", 
+                energyLabel3: "Medium", 
+                energyLabel4: "Sufficient", 
+                energyLabel5: "Peak",
                 routineTitle: "Daily Rituals",
                 morningLabel: "Morning Ritual",
                 morningDesc: "Gently start your day",
@@ -1284,25 +1374,43 @@
                 routineMessageText: "These aren't tasks, they're dates with yourself. Every step cares for you.",
                 taskTitle: "Task Management",
                 taskDesc1: "Break big goals into small steps",
+                addTaskBtn: "Add",
+                breakdownBtn: "Breakdown",
                 timerTitle: "Pomodoro Timer",
                 timerDesc1: "Customizable focused time",
                 timerMinLabel: "Minutes:",
+                resetTimerBtn: "Reset",
+                startTimerBtn: "Start Timer",
+                stopTimerBtn: "Stop Timer",
                 healingTitle: "Healing Tools",
                 breathingTitle: "Mindful Breathing",
                 breathingDesc: "When anxious, breathing is the best comfort. Visualize your breathing cycle to regulate your nervous system and reduce stress.",
+                breathingStart: "Click to Start\nBreathing",
+                breathingRelax: "Breathe with Circle\nFully Relax",
                 cognitiveTitle: "Cognitive Restructuring",
                 cognitiveDesc: "Transform negative thoughts into strength.",
                 cognitiveScience: "🧠 Scientific Basis: Cognitive restructuring is core to CBT. Research shows that identifying and challenging inaccurate beliefs significantly improves anxiety, depression, and overthinking. This practice helps break negative thought cycles and build healthier mental patterns.",
+                cognitiveBtn: "Start Practice",
                 groundingTitle: "Grounding (5-4-3-2-1)",
                 groundingDesc: "Feel the present, return to now.",
                 groundingScience: "🧠 Scientific Basis: The 5-4-3-2-1 grounding technique is a sensory redirection method that activates your parasympathetic nervous system through five senses, counteracting anxiety-induced fight-or-flight response. This technique helps return you to the present within seconds.",
+                groundingBtn: "Start Grounding",
                 emotionTitle: "Emotion Journal",
                 emotionLogTitle: "Record your current emotion",
+                emotionBtn1: "😊 Happy",
+                emotionBtn2: "😌 Calm",
+                emotionBtn3: "😢 Sad",
+                emotionBtn4: "😰 Anxious",
                 backBtn: "Back to Home",
                 reportTitle: "📄 Assessment Report",
+                historyTitle: "Assessment History",
                 emailWarning: "⚠️ Important: All records are stored only on this device. To save a report copy via email, enter your email address. The system will open your mail app where you can send or copy to clipboard.",
+                emailPlaceholder: "Enter your email",
+                sendReportBtn: "Send Report",
                 emotionReportTitle: "📊 Complete Report",
                 emotionReportDesc: "Send complete report with all achievements to your email",
+                emotionEmailPlaceholder: "Enter your email",
+                sendEmotionReportBtn: "Send Report",
                 nutritionTitle: "Nutrition Advice",
                 nutritionDesc: "Nutrition plan tailored for ADHD",
                 nutritionIntro: "Based on 2026 latest US dietary guidelines, these nutrition tips help improve focus and emotional stability.",
@@ -1313,8 +1421,60 @@
                 nutritionMessage: "Proper nutrition is the first step to self-care. Every nutrition choice helps you focus.",
                 taskBreakdownTitle: "Break Down Task",
                 taskBreakdownDesc: "Break big task into small steps",
+                newStepPlaceholder: "Enter step...",
                 confirmTaskBtn: "Confirm Breakdown",
-                cancelTaskBtn: "Cancel"
+                cancelTaskBtn: "Cancel",
+                alarmSelectTitle: "Select Alarm Sound",
+                groundingTitleModal: "Grounding (5-4-3-2-1)",
+                cognitiveResultTitle: "Cognitive Restructuring",
+                closeCognitiveBtn: "Done",
+                customInputQuestion: "What negative thought are you having?",
+                submitCognitiveBtn: "Confirm",
+                cancelCognitiveBtn: "Cancel",
+                deleteBtnText: "Delete",
+                noEmotionText: "No records yet. Start logging your emotions!",
+                noTaskText: "No tasks yet. Add your first one!",
+                noHistoryText: "No assessment history yet.",
+                deleteText: "Delete",
+                groundingCompleteMsg: "🌍 Grounding complete!\n\nYou are back in the present. Feel your breath, feel your body connected to the ground. You are safe.",
+                nextBtn: "Next",
+                completeBtn: "Complete",
+                breatingDoneMsg: "😌 You did great",
+                inhalation: "Inhale...",
+                hold: "Hold...",
+                exhalation: "Exhale...",
+                doneMsg: "Done! Take a break",
+                emotionTime: "Time",
+                emailInputPlaceholder: "Enter your email",
+                noAssessmentText: "No assessment history yet."
+            },
+            'assessTitle': {
+                'zh': '評估標題',
+                'en': 'Assessment Title'
+            },
+            'assessDesc1': {
+                'zh': '評估標題',
+                'en': 'Assessment Title'
+            },
+            'assessDesc2': {
+                'zh': '評估標題',
+                'en': 'Assessment Title'
+            },
+            'submitAssessmentBtn': {
+                'zh': '評估標題',
+                'en': 'Assessment Title'
+            },
+            'reportTitle': {
+                'zh': '評估標題',
+                'en': 'Assessment Title'
+            },
+            'historyTitle': {
+                'zh': '評估標題',
+                'en': 'Assessment Title'
+            },
+            'emailWarning': {
+                'zh': '評估標題',
+                'en': 'Assessment Title'
             }
         };
 
@@ -1355,184 +1515,8 @@
             '😴 Say "You worked hard today" before bed'
         ];
 
-        let currentLanguage = 'zh';
-        let currentPage = 'homePage';
-        let lastAccessedFeature = null;
-        let stats = JSON.parse(localStorage.getItem('stats')) || { level: 1, xp: 0, streak: 0, totalMinutes: 0 };
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        let emotionLog = JSON.parse(localStorage.getItem('emotionLog')) || [];
-        let morningRoutine = JSON.parse(localStorage.getItem('morningRoutine')) || (currentLanguage === 'zh' ? defaultMorningRoutineZh : defaultMorningRoutineEn);
-        let eveningRoutine = JSON.parse(localStorage.getItem('eveningRoutine')) || (currentLanguage === 'zh' ? defaultEveningRoutineZh : defaultEveningRoutineEn);
-        let assessmentHistory = JSON.parse(localStorage.getItem('assessmentHistory')) || [];
-        let isBreathingAnimating = false;
-        let timerDuration = 25 * 60;
-        let timeLeft = 25 * 60;
-        let timerInterval = null;
-        let currentAlarmSound = 'default';
-        let groundingCurrentStep = 0;
-        let currentBreakdownTask = null;
-        let breakdownSteps = [];
-
-        // 鬧鈴選項配置 - 華麗的音效
-        const alarmSoundsConfig = {
-            default: { name: '預設音 🔔', freq: 800, duration: 0.2 },
-            chime: { 
-                name: '華麗和弦 🎵', 
-                sequence: [{freq: 1000, dur: 0.3}, {freq: 1200, dur: 0.3}, {freq: 1400, dur: 0.4}, {freq: 1200, dur: 0.3}, {freq: 1000, dur: 0.3}],
-                isSequence: true
-            },
-            bell: { 
-                name: '優雅鈴聲 🔔', 
-                sequence: [{freq: 800, dur: 0.4}, {freq: 1000, dur: 0.3}, {freq: 900, dur: 0.35}, {freq: 1100, dur: 0.4}],
-                isSequence: true
-            },
-            buzz: { 
-                name: '律動蜂鳴 ⚡', 
-                sequence: [{freq: 1200, dur: 0.2}, {freq: 1200, dur: 0.2}, {freq: 1500, dur: 0.3}, {freq: 1200, dur: 0.2}, {freq: 1200, dur: 0.2}, {freq: 1500, dur: 0.3}],
-                isSequence: true
-            }
-        };
-
-        function t(key) {
-            return translations[currentLanguage][key] || key;
-        }
-
-        function switchLanguage(lang) {
-            currentLanguage = lang;
-            document.getElementById('langZh').classList.toggle('active', lang === 'zh');
-            document.getElementById('langEn').classList.toggle('active', lang === 'en');
-            updateAllText();
-            if (currentPage === 'routinePage') renderRoutines();
-            if (currentPage === 'taskPage') renderTasks();
-            if (currentPage === 'emotionPage') renderEmotionLog();
-            if (currentPage === 'nutritionPage') updateNutritionPage();
-            if (currentPage === 'assessmentPage') renderAssessmentHistory();
-            updateTopStats();
-        }
-
-        function updateAllText() {
-            if (document.getElementById('levelLabel')) document.getElementById('levelLabel').textContent = t('levelLabel');
-            if (document.getElementById('xpLabel')) document.getElementById('xpLabel').textContent = t('xpLabel');
-            if (document.getElementById('streakLabel')) document.getElementById('streakLabel').textContent = t('streakLabel');
-            if (document.getElementById('minutesLabel')) document.getElementById('minutesLabel').textContent = t('minutesLabel');
-            
-            document.getElementById('headerSubtitle').textContent = t('headerSubtitle');
-            document.getElementById('usageNote').textContent = t('usageNote');
-            document.getElementById('tipsNote').textContent = t('tipsNote');
-            
-            document.getElementById('f1Title').textContent = t('f1Title');
-            document.getElementById('f1Desc').textContent = t('f1Desc');
-            document.getElementById('f1Btn').textContent = t('f1Btn');
-            document.getElementById('f2Title').textContent = t('f2Title');
-            document.getElementById('f2Desc').textContent = t('f2Desc');
-            document.getElementById('f2Btn').textContent = t('f2Btn');
-            document.getElementById('f3Title').textContent = t('f3Title');
-            document.getElementById('f3Desc').textContent = t('f3Desc');
-            document.getElementById('f3Btn').textContent = t('f3Btn');
-            document.getElementById('f4Title').textContent = t('f4Title');
-            document.getElementById('f4Desc').textContent = t('f4Desc');
-            document.getElementById('f4Btn').textContent = t('f4Btn');
-            document.getElementById('f5Title').textContent = t('f5Title');
-            document.getElementById('f5Desc').textContent = t('f5Desc');
-            document.getElementById('f5Btn').textContent = t('f5Btn');
-            document.getElementById('f6Title').textContent = t('f6Title');
-            document.getElementById('f6Desc').textContent = t('f6Desc');
-            document.getElementById('f6Btn').textContent = t('f6Btn');
-            document.getElementById('f7Title').textContent = t('f7Title');
-            document.getElementById('f7Desc').textContent = t('f7Desc');
-            document.getElementById('f7Btn').textContent = t('f7Btn');
-            document.getElementById('f8Title').textContent = t('f8Title');
-            document.getElementById('f8Desc').textContent = t('f8Desc');
-            document.getElementById('f8Btn').textContent = t('f8Btn');
-            
-            Array.from(document.querySelectorAll('[id^="backBtn"]')).forEach(el => {
-                if (el.id === 'backBtn') el.textContent = t('backBtn');
-            });
-            Array.from(document.querySelectorAll('[id^="bottomBackBtn"]')).forEach(el => {
-                el.textContent = t('backBtn');
-            });
-            
-            if (document.getElementById('assessTitle')) document.getElementById('assessTitle').textContent = t('assessTitle');
-            if (document.getElementById('assessDesc1')) document.getElementById('assessDesc1').textContent = t('assessDesc1');
-            if (document.getElementById('assessDesc2')) document.getElementById('assessDesc2').textContent = t('assessDesc2');
-            if (document.getElementById('energyTitle')) document.getElementById('energyTitle').textContent = t('energyTitle');
-            if (document.getElementById('energyQuestion')) document.getElementById('energyQuestion').textContent = t('energyQuestion');
-            if (document.getElementById('energyDesc')) document.getElementById('energyDesc').textContent = t('energyDesc');
-            if (document.getElementById('energyLabel1')) document.getElementById('energyLabel1').textContent = t('energyLabel1');
-            if (document.getElementById('energyLabel2')) document.getElementById('energyLabel2').textContent = t('energyLabel2');
-            if (document.getElementById('energyLabel3')) document.getElementById('energyLabel3').textContent = t('energyLabel3');
-            if (document.getElementById('energyLabel4')) document.getElementById('energyLabel4').textContent = t('energyLabel4');
-            if (document.getElementById('energyLabel5')) document.getElementById('energyLabel5').textContent = t('energyLabel5');
-            if (document.getElementById('taskBreakdownTitle')) document.getElementById('taskBreakdownTitle').textContent = t('taskBreakdownTitle');
-            if (document.getElementById('taskBreakdownDesc')) document.getElementById('taskBreakdownDesc').textContent = t('taskBreakdownDesc');
-        }
-
-        // ========== 頁面導航 ==========
-        function goToPage(pageId) {
-            document.getElementById(currentPage).classList.remove('active');
-            document.getElementById(pageId).classList.add('active');
-            currentPage = pageId;
-            lastAccessedFeature = pageId;
-
-            if (pageId === 'assessmentPage') {
-                renderAssessmentQuestions();
-                renderAssessmentHistory();
-            } else if (pageId === 'routinePage') {
-                renderRoutines();
-            } else if (pageId === 'taskPage') {
-                renderTasks();
-            } else if (pageId === 'emotionPage') {
-                renderEmotionLog();
-            } else if (pageId === 'nutritionPage') {
-                updateNutritionPage();
-            } else if (pageId === 'homePage') {
-                updateTopStats();
-            }
-
-            window.scrollTo(0, 0);
-        }
-
-        function backToHomeFrom(pageId) {
-            document.getElementById(currentPage).classList.remove('active');
-            document.getElementById('homePage').classList.add('active');
-            currentPage = 'homePage';
-            updateTopStats();
-            
-            setTimeout(() => {
-                scrollToFeature(pageId);
-            }, 100);
-        }
-
-        function scrollToFeature(pageId) {
-            const pageToCardMap = {
-                'assessmentPage': 0,
-                'energyPage': 1,
-                'routinePage': 2,
-                'taskPage': 3,
-                'timerPage': 4,
-                'healingPage': 5,
-                'emotionPage': 6,
-                'nutritionPage': 7
-            };
-
-            const cardIndex = pageToCardMap[pageId];
-            if (cardIndex !== undefined) {
-                const cards = document.querySelectorAll('.feature-card');
-                if (cards[cardIndex]) {
-                    cards[cardIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }
-        }
-
-        function updateTopStats() {
-            document.getElementById('topLevel').textContent = 'Lv. ' + stats.level;
-            document.getElementById('topXp').textContent = stats.xp;
-            document.getElementById('topStreak').textContent = stats.streak;
-            document.getElementById('topMinutes').textContent = stats.totalMinutes;
-        }
-
-        // ========== 評估系統 ==========
-        const assessmentQuestions = [
+        // 評估問題
+        const assessmentQuestionsZh = [
             '我經常拖延任務直到最後一刻',
             '我在進行無聊任務時難以保持專注',
             '我容易被無關的東西分散注意力',
@@ -1545,16 +1529,398 @@
             '我難以組織事物或管理時間'
         ];
 
+        const assessmentQuestionsEn = [
+            'I often procrastinate on tasks until the last moment',
+            'I find it difficult to focus when doing boring tasks',
+            'I get easily distracted by unrelated things',
+            'I forget to reply to messages or complete planned tasks',
+            'I act impulsively without considering consequences',
+            'I easily feel impatient or frustrated',
+            'I have difficulty following instructions or completing multi-step tasks',
+            'I often interrupt others or speak impulsively',
+            'My mood changes quickly',
+            'I have difficulty organizing things or managing time'
+        ];
+
+        // 鬧鈴選項
+        const alarmSoundsConfig = {
+            default: { 
+                name: { zh: '預設音 🔔', en: 'Default Sound 🔔' },
+                freq: 800, 
+                duration: 0.2 
+            },
+            zen: {
+                name: { zh: '禪意靜心 🧘', en: 'Zen Mindfulness 🧘' },
+                sequence: [{freq: 440, dur: 0.8}, {freq: 554.37, dur: 0.8}, {freq: 659.25, dur: 1.2}],
+                isSequence: true
+            },
+            digital: {
+                name: { zh: '科技律動 💻', en: 'Digital Pulse 💻' },
+                sequence: [{freq: 880, dur: 0.1}, {freq: 0, dur: 0.1}, {freq: 880, dur: 0.1}, {freq: 0, dur: 0.1}, {freq: 1320, dur: 0.4}],
+                isSequence: true
+            },
+            chime: { 
+                name: { zh: '華麗和弦 🎵', en: 'Elegant Chord 🎵' },
+                sequence: [{freq: 1000, dur: 0.3}, {freq: 1200, dur: 0.3}, {freq: 1400, dur: 0.4}, {freq: 1200, dur: 0.3}, {freq: 1000, dur: 0.3}],
+                isSequence: true
+            },
+            bell: { 
+                name: { zh: '優雅鈴聲 🔔', en: 'Elegant Bell 🔔' },
+                sequence: [{freq: 800, dur: 0.4}, {freq: 1000, dur: 0.3}, {freq: 900, dur: 0.35}, {freq: 1100, dur: 0.4}],
+                isSequence: true
+            },
+            buzz: { 
+                name: { zh: '律動蜂鳴 ⚡', en: 'Rhythmic Buzz ⚡' },
+                sequence: [{freq: 1200, dur: 0.2}, {freq: 1200, dur: 0.2}, {freq: 1500, dur: 0.3}, {freq: 1200, dur: 0.2}, {freq: 1200, dur: 0.2}, {freq: 1500, dur: 0.3}],
+                isSequence: true
+            }
+        };
+
+        // 能量推薦配置
+        const energyRecommendationsZh = {
+            1: ['喝杯咖啡或茶☕', '進行5分鐘拉伸🧘', '聽最喜歡的歌🎵', '做深呼吸練習🌬️', '換個環境散步🚶'],
+            2: ['5-10分鐘散步🚶', '做簡單文書工作📝', '回覆短信息💬', '輕度伸展🤸', '調整坐姿💺'],
+            3: ['完成日常工作✅', '處理中等複雜度任務🎯', '參加會議🤝', '協作項目👥', '進度檢查📊'],
+            4: ['啟動創意項目🎨', '進行深度工作🔍', '學習新技能📚', '複雜問題解決🧩', '策略規劃📋'],
+            5: ['啟動重大項目🚀', '解決複雜問題💡', '進行長期製作🎬', '領導團隊👑', '創新突破⭐']
+        };
+
+        const energyRecommendationsEn = {
+            1: ['Have a coffee or tea☕', '5-minute stretch🧘', 'Listen to favorite songs🎵', 'Deep breathing🌬️', 'Take a walk🚶'],
+            2: ['5-10 minute walk🚶', 'Simple paperwork📝', 'Reply short messages💬', 'Light stretching🤸', 'Adjust posture💺'],
+            3: ['Complete daily tasks✅', 'Handle moderate complexity🎯', 'Attend meetings🤝', 'Collaboration👥', 'Progress check📊'],
+            4: ['Start creative project🎨', 'Deep work🔍', 'Learn new skills📚', 'Solve complex problems🧩', 'Strategic planning📋'],
+            5: ['Launch major project🚀', 'Solve complex issues💡', 'Long-term production🎬', 'Lead teams👑', 'Creative breakthrough⭐']
+        };
+
+        const energyTextsZh = {
+            1: '🔴 超低能量：簡單工作（查看郵件、整理桌面、喝水、聽音樂）',
+            2: '🟡 低-中等能量：中等工作（回覆消息、整理文件、簡單編輯、輕度閱讀）',
+            3: '🟢 中等能量：一般工作（大多數工作、錄製、內容規劃、會議）',
+            4: '💚 高能量：有挑戰的任務（創意項目、複雜編輯、重要會議、教學）',
+            5: '✨ 超充足能量：高難度任務（全天拍攝、複雜製作、創意突破、領導工作）'
+        };
+
+        const energyTextsEn = {
+            1: '🔴 Very Low Energy: Simple tasks (check email, organize desk, drink water, listen to music)',
+            2: '🟡 Low-Medium Energy: Moderate tasks (reply messages, organize files, simple editing, light reading)',
+            3: '🟢 Medium Energy: Regular work (most tasks, recording, content planning, meetings)',
+            4: '💚 High Energy: Challenging tasks (creative projects, complex editing, important meetings, teaching)',
+            5: '✨ Peak Energy: High difficulty (all-day shooting, complex production, creative breakthroughs, leadership)'
+        };
+
+        // 營養數據配置
+        const nutritionDataZh = {
+            priority: [
+                "🐠 奧米加-3脂肪酸（DHA/EPA）- 改善認知功能和注意力",
+                "🥛 蛋白質 - 穩定血糖，增強去甲腎上腺素分泌",
+                "🥬 B族維生素（B6、B12、葉酸）- 支持神經傳遞物質合成",
+                "⚡ 鋅和鎂 - 促進神經健康和情緒調節",
+                "🍓 抗氧化劑（莓果、深色蔬菜）- 保護大腦細胞",
+                "🥔 複雜碳水化合物 - 提供穩定的能量"
+            ],
+            eatingOrder: [
+                "1️⃣ 先吃纖維 - 蔬菜、全穀物、豆類",
+                "2️⃣ 再吃蛋白質和脂肪 - 肉類、魚、堅果、乳製品",
+                "3️⃣ 最後吃碳水化合物 - 米飯、麵條、麵包"
+            ],
+            avoid: [
+                "🚫 高糖食品 - 導致血糖波動和注意力下降",
+                "🚫 過度加工食品 - 含有人工添加劑和防腐劑",
+                "🚫 含咖啡因過多飲料 - 可能加重焦慮和不穩定",
+                "🚫 反式脂肪 - 對大腦和心臟有害",
+                "🚫 人工色素和香料 - 可能觸發行為問題",
+                "🚫 過量鹽分 - 影響血壓和神經系統"
+            ]
+        };
+
+        const nutritionDataEn = {
+            priority: [
+                "🐠 Omega-3 Fatty Acids (DHA/EPA) - Improve cognitive function and attention",
+                "🥛 Protein - Stabilize blood sugar, enhance norepinephrine secretion",
+                "🥬 B Vitamins (B6, B12, Folate) - Support neurotransmitter synthesis",
+                "⚡ Zinc and Magnesium - Promote brain health and mood regulation",
+                "🍓 Antioxidants (Berries, dark vegetables) - Protect brain cells",
+                "🥔 Complex Carbohydrates - Provide stable energy"
+            ],
+            eatingOrder: [
+                "1️⃣ Eat fiber first - Vegetables, whole grains, legumes",
+                "2️⃣ Then eat protein and fat - Meat, fish, nuts, dairy",
+                "3️⃣ Finally eat carbohydrates - Rice, pasta, bread"
+            ],
+            avoid: [
+                "🚫 High-sugar foods - Cause blood sugar spikes and attention drops",
+                "🚫 Ultra-processed foods - Contain artificial additives and preservatives",
+                "🚫 Excessive caffeine beverages - May worsen anxiety and instability",
+                "🚫 Trans fats - Harmful to brain and heart",
+                "🚫 Artificial dyes and flavorings - May trigger behavioral issues",
+                "🚫 Excessive salt - Affects blood pressure and nervous system"
+            ]
+        };
+
+        // ========== 全局變量 ==========
+        let currentLanguage = 'zh';
+        let currentPage = 'homePage';
+        let stats = JSON.parse(localStorage.getItem('stats')) || { level: 1, xp: 0, streak: 0, totalMinutes: 0 };
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let emotionLog = JSON.parse(localStorage.getItem('emotionLog')) || [];
+        let morningRoutine = JSON.parse(localStorage.getItem('morningRoutine')) || defaultMorningRoutineZh.slice();
+        let eveningRoutine = JSON.parse(localStorage.getItem('eveningRoutine')) || defaultEveningRoutineZh.slice();
+        let assessmentHistory = JSON.parse(localStorage.getItem('assessmentHistory')) || [];
+        let isBreathingAnimating = false;
+        let timerDuration = 25 * 60;
+        let timeLeft = 25 * 60;
+        let timerInterval = null;
+        let currentAlarmSound = 'default';
+        let groundingCurrentStep = 0;
+        let currentBreakdownTask = null;
+        let breakdownSteps = [];
+
+        // ========== 翻譯函數 ==========
+        function t(key) {
+            return translations[currentLanguage][key] || key;
+        }
+
+        // ========== 語言切換 ==========
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            document.getElementById('langZh').classList.toggle('active', lang === 'zh');
+            document.getElementById('langEn').classList.toggle('active', lang === 'en');
+            
+            // 更新早晨和傍晚儀式
+            morningRoutine = lang === 'zh' ? defaultMorningRoutineZh.slice() : defaultMorningRoutineEn.slice();
+            eveningRoutine = lang === 'zh' ? defaultEveningRoutineZh.slice() : defaultEveningRoutineEn.slice();
+            localStorage.setItem('morningRoutine', JSON.stringify(morningRoutine));
+            localStorage.setItem('eveningRoutine', JSON.stringify(eveningRoutine));
+            
+            updateAllText();
+            updateTopStats();
+            
+            // 重新渲染當前頁面
+            if (currentPage === 'routinePage') renderRoutines();
+            if (currentPage === 'taskPage') renderTasks();
+            if (currentPage === 'emotionPage') renderEmotionLog();
+            if (currentPage === 'nutritionPage') updateNutritionPage();
+            if (currentPage === 'assessmentPage') { renderAssessmentQuestions(); renderAssessmentHistory(); }
+            if (currentPage === 'healingPage') updateBreathingText();
+        }
+
+        function updateAllText() {
+            // 安全設置文本的輔助函數
+            const safeSetText = (id, key) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = t(key);
+            };
+            
+            // 首頁文本
+            try {
+                safeSetText('levelLabel', 'levelLabel');
+                safeSetText('xpLabel', 'xpLabel');
+                safeSetText('streakLabel', 'streakLabel');
+                safeSetText('minutesLabel', 'minutesLabel');
+            safeSetText('headerSubtitle', 'headerSubtitle');
+            safeSetText('usageNote', 'usageNote');
+            safeSetText('tipsNote', 'tipsNote');
+
+            // 功能卡片
+            safeSetText('f1Title', 'f1Title');
+            safeSetText('f1Desc', 'f1Desc');
+            safeSetText('f1Btn', 'f1Btn');
+            safeSetText('f2Title', 'f2Title');
+            safeSetText('f2Desc', 'f2Desc');
+            safeSetText('f2Btn', 'f2Btn');
+            safeSetText('f3Title', 'f3Title');
+            safeSetText('f3Desc', 'f3Desc');
+            safeSetText('f3Btn', 'f3Btn');
+            safeSetText('f4Title', 'f4Title');
+            safeSetText('f4Desc', 'f4Desc');
+            safeSetText('f4Btn', 'f4Btn');
+            safeSetText('f5Title', 'f5Title');
+            safeSetText('f5Desc', 'f5Desc');
+            safeSetText('f5Btn', 'f5Btn');
+            safeSetText('f6Title', 'f6Title');
+            safeSetText('f6Desc', 'f6Desc');
+            safeSetText('f6Btn', 'f6Btn');
+            safeSetText('f7Title', 'f7Title');
+            safeSetText('f7Desc', 'f7Desc');
+            safeSetText('f7Btn', 'f7Btn');
+            safeSetText('f8Title', 'f8Title');
+            safeSetText('f8Desc', 'f8Desc');
+            safeSetText('f8Btn', 'f8Btn');
+
+            // 返回按鈕
+            Array.from(document.querySelectorAll('[id^="backBtn"]')).forEach(el => {
+                if (el.textContent.includes('←')) {
+                    el.textContent = '← ' + t('backBtn');
+                }
+            });
+
+            // 評估頁面
+            safeSetText('assessTitle', 'assessTitle');
+            safeSetText('assessDesc1', 'assessDesc1');
+            safeSetText('assessDesc2', 'assessDesc2');
+            safeSetText('submitAssessmentBtn', 'submitAssessmentBtn');
+            safeSetText('reportTitle', 'reportTitle');
+            safeSetText('historyTitle', 'historyTitle');
+            safeSetText('emailWarning', 'emailWarning');
+            document.getElementById('emailInput').placeholder = t('emailInputPlaceholder');
+
+            // 能量頁面
+            safeSetText('energyTitle', 'energyTitle');
+            safeSetText('energyQuestion', 'energyQuestion');
+            safeSetText('energyDesc', 'energyDesc');
+            safeSetText('energyLabel1', 'energyLabel1');
+            safeSetText('energyLabel2', 'energyLabel2');
+            safeSetText('energyLabel3', 'energyLabel3');
+            safeSetText('energyLabel4', 'energyLabel4');
+            safeSetText('energyLabel5', 'energyLabel5');
+
+            // 日程頁面
+            safeSetText('routineTitle', 'routineTitle');
+            safeSetText('morningLabel', 'morningLabel');
+            safeSetText('morningDesc', 'morningDesc');
+            safeSetText('eveningLabel', 'eveningLabel');
+            safeSetText('eveningDesc', 'eveningDesc');
+            document.getElementById('newMorningInput').placeholder = currentLanguage === 'zh' ? '添加新的早晨儀式...' : 'Add a morning ritual...';
+            document.getElementById('newEveningInput').placeholder = currentLanguage === 'zh' ? '添加新的傍晚儀式...' : 'Add an evening ritual...';
+            safeSetText('routineMessageText', 'routineMessageText');
+
+            // 任務頁面
+            safeSetText('taskTitle', 'taskTitle');
+            safeSetText('taskDesc1', 'taskDesc1');
+            document.getElementById('newTaskInput').placeholder = currentLanguage === 'zh' ? '例：完成報告、學習新技能...' : 'Example: Complete report, learn new skills...';
+            safeSetText('addTaskBtn', 'addTaskBtn');
+            safeSetText('breakdownBtn', 'breakdownBtn');
+
+            // 計時器頁面
+            safeSetText('timerTitle', 'timerTitle');
+            safeSetText('timerDesc1', 'timerDesc1');
+            safeSetText('timerMinLabel', 'timerMinLabel');
+            safeSetText('resetTimerBtn', 'resetTimerBtn');
+            safeSetText('startTimerBtn', 'startTimerBtn');
+            safeSetText('stopTimerBtn', 'stopTimerBtn');
+            document.getElementById('alarmBtn').textContent = '🔔';
+            document.getElementById('testAlarmBtn').textContent = '🔊';
+
+            // 療癒工具頁面
+            safeSetText('healingTitle', 'healingTitle');
+            safeSetText('breathingTitle', 'breathingTitle');
+            safeSetText('breathingDesc', 'breathingDesc');
+            safeSetText('cognitiveTitle', 'cognitiveTitle');
+            safeSetText('cognitiveDesc', 'cognitiveDesc');
+            safeSetText('cognitiveScience', 'cognitiveScience');
+            safeSetText('cognitiveBtn', 'cognitiveBtn');
+            safeSetText('groundingTitle', 'groundingTitle');
+            safeSetText('groundingDesc', 'groundingDesc');
+            safeSetText('groundingScience', 'groundingScience');
+            safeSetText('groundingBtn', 'groundingBtn');
+
+            // 情緒頁面
+            safeSetText('emotionTitle', 'emotionTitle');
+            safeSetText('emotionLogTitle', 'emotionLogTitle');
+            safeSetText('emotionBtn1', 'emotionBtn1');
+            safeSetText('emotionBtn2', 'emotionBtn2');
+            safeSetText('emotionBtn3', 'emotionBtn3');
+            safeSetText('emotionBtn4', 'emotionBtn4');
+            safeSetText('emotionReportTitle', 'emotionReportTitle');
+            safeSetText('emotionReportDesc', 'emotionReportDesc');
+            document.getElementById('emotionEmailInput').placeholder = t('emotionEmailPlaceholder');
+
+            // 飲食頁面
+            safeSetText('nutritionTitle', 'nutritionTitle');
+            safeSetText('nutritionDesc', 'nutritionDesc');
+            safeSetText('nutritionIntro', 'nutritionIntro');
+            safeSetText('nutritionSection1', 'nutritionSection1');
+            safeSetText('nutritionSection2', 'nutritionSection2');
+            safeSetText('eatingOrderDesc', 'eatingOrderDesc');
+            safeSetText('nutritionSection3', 'nutritionSection3');
+            safeSetText('nutritionMessage', 'nutritionMessage');
+
+            // Modal
+            safeSetText('alarmSelectTitle', 'alarmSelectTitle');
+            safeSetText('taskBreakdownTitle', 'taskBreakdownTitle');
+            safeSetText('taskBreakdownDesc', 'taskBreakdownDesc');
+            document.getElementById('newStepInput').placeholder = t('newStepPlaceholder');
+            safeSetText('confirmTaskBtn', 'confirmTaskBtn');
+            safeSetText('cancelTaskBtn', 'cancelTaskBtn');
+            safeSetText('groundingTitle', 'groundingTitle');
+            safeSetText('cognitiveResultTitle', 'cognitiveResultTitle');
+            safeSetText('closeCognitiveBtn', 'closeCognitiveBtn');
+            safeSetText('customInputQuestion', 'customInputQuestion');
+            safeSetText('submitCognitiveBtn', 'submitCognitiveBtn');
+            safeSetText('cancelCognitiveBtn', 'cancelCognitiveBtn');
+            } catch(e) {
+                console.error('Error in updateAllText:', e);
+            }
+        }
+
+        function updateBreathingText() {
+            if (isBreathingAnimating) {
+                document.getElementById('breathText').innerHTML = t('breathingRelax');
+            } else {
+                document.getElementById('breathText').innerHTML = t('breathingStart');
+            }
+        }
+
+        // ========== 頁面導航 ==========
+        function goToPage(pageId) {
+            document.getElementById(currentPage).classList.remove('active');
+            document.getElementById(pageId).classList.add('active');
+            currentPage = pageId;
+            window.scrollTo(0, 0);
+            
+            // 特定頁面的初始化
+            if (pageId === 'assessmentPage') {
+                renderAssessmentQuestions();
+                renderAssessmentHistory();
+            }
+            if (pageId === 'energyPage') {
+                const rec = document.getElementById('energyRecommendation');
+                if (rec) rec.style.display = 'none';
+            }
+        }
+
+        function backToHomeFrom(pageId) {
+            document.getElementById(currentPage).classList.remove('active');
+            document.getElementById('homePage').classList.add('active');
+            currentPage = 'homePage';
+            updateTopStats();
+            setTimeout(() => scrollToFeature(pageId), 100);
+        }
+
+        function scrollToFeature(pageId) {
+            const pageToCardMap = {
+                'assessmentPage': 0, 'energyPage': 1, 'routinePage': 2, 'taskPage': 3,
+                'timerPage': 4, 'healingPage': 5, 'emotionPage': 6, 'nutritionPage': 7
+            };
+            const cardIndex = pageToCardMap[pageId];
+            if (cardIndex !== undefined) {
+                const cards = document.querySelectorAll('.feature-card');
+                if (cards[cardIndex]) cards[cardIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function updateTopStats() {
+            document.getElementById('topLevel').textContent = 'Lv. ' + stats.level;
+            document.getElementById('topXp').textContent = stats.xp;
+            document.getElementById('topStreak').textContent = stats.streak;
+            document.getElementById('topMinutes').textContent = stats.totalMinutes;
+        }
+
+        // ========== 評估系統 ==========
         function renderAssessmentQuestions() {
+            const questions = currentLanguage === 'zh' ? assessmentQuestionsZh : assessmentQuestionsEn;
             const container = document.getElementById('assessmentQuestions');
-            container.innerHTML = assessmentQuestions.map((q, i) => `
+            const labels = currentLanguage === 'zh' ? ['從不', '很少', '有時', '經常', '總是'] : ['Never', 'Rarely', 'Sometimes', 'Often', 'Always'];
+            
+            container.innerHTML = questions.map((q, i) => `
                 <div class="question-group">
                     <label>${i + 1}. ${q}</label>
                     <input type="range" class="slider" id="q${i}" min="1" max="5" value="3" onchange="updateSliderLabel(${i})">
                     <div style="display: flex; justify-content: space-between; margin-top: 8px; color: var(--text-secondary); font-size: 0.85em;">
-                        <span>從不</span>
-                        <span id="label${i}">有時</span>
-                        <span>總是</span>
+                        <span>${labels[0]}</span>
+                        <span id="label${i}">${labels[2]}</span>
+                        <span>${labels[4]}</span>
                     </div>
                 </div>
             `).join('');
@@ -1562,7 +1928,7 @@
 
         function updateSliderLabel(index) {
             const value = document.getElementById(`q${index}`).value;
-            const labels = ['從不', '很少', '有時', '經常', '總是'];
+            const labels = currentLanguage === 'zh' ? ['從不', '很少', '有時', '經常', '總是'] : ['Never', 'Rarely', 'Sometimes', 'Often', 'Always'];
             document.getElementById(`label${index}`).textContent = labels[value - 1];
         }
 
@@ -1608,13 +1974,11 @@
             resultDiv.classList.remove('hidden');
 
             const now = new Date();
-            const record = {
-                id: Date.now(),
-                date: now.toLocaleString(),
-                score: score,
-                level: level,
-                advice: advice
-            };
+            const dateStr = currentLanguage === 'zh' 
+                ? now.toLocaleDateString('zh-TW') + ' ' + now.toLocaleTimeString('zh-TW')
+                : now.toLocaleDateString('en-US') + ' ' + now.toLocaleTimeString('en-US');
+            
+            const record = { id: Date.now(), date: dateStr, score: score, level: level, advice: advice };
             assessmentHistory.push(record);
             localStorage.setItem('assessmentHistory', JSON.stringify(assessmentHistory));
 
@@ -1630,23 +1994,19 @@
             const list = document.getElementById('assessmentHistoryList');
             if (!list) return;
             if (assessmentHistory.length === 0) {
-                list.innerHTML = `<p style="color: var(--text-secondary); font-size:0.9em;">${currentLanguage === 'zh' ? '目前還沒有歷史評估記錄。' : 'No assessment history yet.'}</p>`;
+                list.innerHTML = `<p style="color: var(--text-secondary); font-size:0.9em;">${t('noAssessmentText')}</p>`;
                 return;
             }
 
             list.innerHTML = assessmentHistory.slice().reverse().map(rec => {
-                const labelLevel = currentLanguage === 'zh' ? '等級' : 'Level';
-                const labelScore = currentLanguage === 'zh' ? '分數' : 'Score';
-                const labelTime = currentLanguage === 'zh' ? '時間' : 'Time';
-                const deleteText = currentLanguage === 'zh' ? '刪除' : 'Delete';
                 return `
                     <div style="padding:12px; margin:6px 0; border-radius:8px; background:rgba(74,144,226,0.08); display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:0.9em; color:var(--text-secondary);">${labelTime}: ${rec.date}</span>
-                            <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.8em; margin:0;" onclick="deleteAssessmentRecord(${rec.id});">${deleteText}</button>
+                            <span style="font-size:0.9em; color:var(--text-secondary);">${rec.date}</span>
+                            <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.8em; margin:0;" onclick="deleteAssessmentRecord(${rec.id});">${t('deleteText')}</button>
                         </div>
                         <div style="font-size:0.95em;">
-                            <strong>${labelLevel}</strong>: ${rec.level}　<strong>${labelScore}</strong>: ${rec.score}/50
+                            <strong>${rec.level}</strong>　<strong>${rec.score}/50</strong>
                         </div>
                         <div style="font-size:0.85em; color:var(--text-secondary);">${rec.advice}</div>
                     </div>
@@ -1701,40 +2061,8 @@
             document.getElementById(`energyBtn${level}`).classList.add('btn');
             document.getElementById(`energyBtn${level}`).style.transform = 'scale(1.05)';
 
-            const energyTextsZh = {
-                1: '🔴 超低能量：簡單工作（查看郵件、整理桌面、喝水、聽音樂）',
-                2: '🟡 低-中等能量：中等工作（回覆消息、整理文件、簡單編輯、輕度閱讀）',
-                3: '🟢 中等能量：一般工作（大多數工作、錄製、內容規劃、會議）',
-                4: '💚 高能量：有挑戰的任務（創意項目、複雜編輯、重要會議、教學）',
-                5: '✨ 超充足能量：高難度任務（全天拍攝、複雜製作、創意突破、領導工作）'
-            };
-
-            const energyTextsEn = {
-                1: '🔴 Very Low Energy: Simple tasks (check email, organize desk, drink water, listen to music)',
-                2: '🟡 Low-Medium Energy: Moderate tasks (reply messages, organize files, simple editing, light reading)',
-                3: '🟢 Medium Energy: Regular work (most tasks, recording, content planning, meetings)',
-                4: '💚 High Energy: Challenging tasks (creative projects, complex editing, important meetings, teaching)',
-                5: '✨ Peak Energy: High difficulty (all-day shooting, complex production, creative breakthroughs, leadership)'
-            };
-
-            const recommendationsZh = {
-                1: ['喝杯咖啡或茶☕', '進行5分鐘拉伸🧘', '聽最喜歡的歌🎵', '做深呼吸練習🌬️', '換個環境散步🚶'],
-                2: ['5-10分鐘散步🚶', '做簡單文書工作📝', '回覆短信息💬', '輕度伸展🤸', '調整坐姿💺'],
-                3: ['完成日常工作✅', '處理中等複雜度任務🎯', '參加會議🤝', '協作項目👥', '進度檢查📊'],
-                4: ['啟動創意項目🎨', '進行深度工作🔍', '學習新技能📚', '複雜問題解決🧩', '策略規劃📋'],
-                5: ['啟動重大項目🚀', '解決複雜問題💡', '進行長期製作🎬', '領導團隊👑', '創新突破⭐']
-            };
-
-            const recommendationsEn = {
-                1: ['Have a coffee or tea☕', '5-minute stretch🧘', 'Listen to favorite songs🎵', 'Deep breathing🌬️', 'Take a walk🚶'],
-                2: ['5-10 minute walk🚶', 'Simple paperwork📝', 'Reply short messages💬', 'Light stretching🤸', 'Adjust posture💺'],
-                3: ['Complete daily tasks✅', 'Handle moderate complexity🎯', 'Attend meetings🤝', 'Collaboration👥', 'Progress check📊'],
-                4: ['Start creative project🎨', 'Deep work🔍', 'Learn new skills📚', 'Solve complex problems🧩', 'Strategic planning📋'],
-                5: ['Launch major project🚀', 'Solve complex issues💡', 'Long-term production🎬', 'Lead teams👑', 'Creative breakthrough⭐']
-            };
-
             const energyTexts = currentLanguage === 'zh' ? energyTextsZh : energyTextsEn;
-            const recommendations = currentLanguage === 'zh' ? recommendationsZh : recommendationsEn;
+            const recommendations = currentLanguage === 'zh' ? energyRecommendationsZh : energyRecommendationsEn;
 
             const html = `
                 <strong>${energyTexts[level]}</strong><br><br>
@@ -1750,7 +2078,6 @@
         function renderRoutines() {
             morningRoutine = morningRoutine.filter(item => typeof item === 'string' && item.trim().length > 0);
             eveningRoutine = eveningRoutine.filter(item => typeof item === 'string' && item.trim().length > 0);
-            
             localStorage.setItem('morningRoutine', JSON.stringify(morningRoutine));
             localStorage.setItem('eveningRoutine', JSON.stringify(eveningRoutine));
 
@@ -1772,17 +2099,11 @@
         }
 
         function handleRoutineCheck(type, index) {
-            const encourageZh = ['🌟 很好！堅持下去！', '✨ 你在照顧自己！', '💪 每一步都算數！', '🎯 完成了一項！'];
-            const encourageEn = ['🌟 Great! Keep going!', '✨ You are taking care of yourself!', '💪 Every step counts!', '🎯 One done!'];
-            const encouragement = currentLanguage === 'zh' ? encourageZh : encourageEn;
-            
-            const msg = encouragement[Math.floor(Math.random() * encouragement.length)];
+            const messages = emotionalMessages.completion;
+            const msg = messages[Math.floor(Math.random() * messages.length)][currentLanguage];
             document.getElementById('emotionalText').textContent = msg;
             document.getElementById('emotionalMessage').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('emotionalMessage').style.display = 'none';
-            }, 3000);
-            
+            setTimeout(() => { document.getElementById('emotionalMessage').style.display = 'none'; }, 3000);
             addXP(10);
         }
 
@@ -1895,7 +2216,6 @@
                 alert(currentLanguage === 'zh' ? '請至少添加一個步驟' : 'Please add at least one step');
                 return;
             }
-            
             tasks = tasks.filter(t => t !== currentBreakdownTask);
             breakdownSteps.forEach(step => {
                 tasks.push({ text: step, completed: false, date: new Date().toDateString(), parent: currentBreakdownTask.text });
@@ -1915,7 +2235,7 @@
         function renderTasks() {
             const container = document.getElementById('taskList');
             if (tasks.length === 0) {
-                container.innerHTML = `<p style="text-align: center; color: var(--text-secondary);">${currentLanguage === 'zh' ? '還沒有任務。添加第一個吧！' : 'No tasks yet. Add your first one!'}</p>`;
+                container.innerHTML = `<p style="text-align: center; color: var(--text-secondary);">${t('noTaskText')}</p>`;
                 document.getElementById('taskProgress').style.width = '0%';
                 return;
             }
@@ -1945,11 +2265,14 @@
             const modal = document.getElementById('alarmSelectionModal');
             const listContainer = document.getElementById('alarmOptionsList');
             
-            listContainer.innerHTML = Object.entries(alarmSoundsConfig).map(([key, config]) => `
-                <div class="alarm-option ${currentAlarmSound === key ? 'selected' : ''}" onclick="selectAlarm('${key}')">
-                    ${config.name}
-                </div>
-            `).join('');
+            listContainer.innerHTML = Object.entries(alarmSoundsConfig).map(([key, config]) => {
+                const name = config.name[currentLanguage];
+                return `
+                    <div class="alarm-option ${currentAlarmSound === key ? 'selected' : ''}" onclick="selectAlarm('${key}')">
+                        ${name}
+                    </div>
+                `;
+            }).join('');
             
             modal.style.display = 'block';
         }
@@ -1958,18 +2281,26 @@
             currentAlarmSound = sound;
             document.querySelectorAll('.alarm-option').forEach(el => el.classList.remove('selected'));
             event.target.classList.add('selected');
+            
+            // 播放預覽
+            playAlarmSound();
+            
             setTimeout(() => {
                 document.getElementById('alarmSelectionModal').style.display = 'none';
-            }, 300);
+            }, 800);
         }
 
         function testAlarmSound() {
-            playAlarmSound(0.3);
+            playAlarmSound();
         }
 
-        function playAlarmSound(volume) {
+        function playAlarmSound(customVolume) {
             const config = alarmSoundsConfig[currentAlarmSound];
             if (!config) return;
+
+            // 使用滑桿音量或傳入的自訂音量
+            const volumeSlider = document.getElementById('volumeSlider');
+            const volume = customVolume !== undefined ? customVolume : (volumeSlider ? volumeSlider.value / 100 * 0.5 : 0.3);
 
             try {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -1977,16 +2308,17 @@
                 if (config.isSequence) {
                     let time = audioContext.currentTime;
                     config.sequence.forEach(note => {
+                        if (note.freq === 0) { // 靜音
+                            time += note.dur;
+                            return;
+                        }
                         const oscillator = audioContext.createOscillator();
                         const gainNode = audioContext.createGain();
-                        
                         gainNode.connect(audioContext.destination);
                         oscillator.connect(gainNode);
-                        
                         gainNode.gain.setValueAtTime(volume, time);
                         oscillator.frequency.value = note.freq;
                         oscillator.type = 'sine';
-                        
                         oscillator.start(time);
                         oscillator.stop(time + note.dur);
                         time += note.dur;
@@ -1994,14 +2326,11 @@
                 } else {
                     const oscillator = audioContext.createOscillator();
                     const gainNode = audioContext.createGain();
-                    
                     gainNode.connect(audioContext.destination);
                     oscillator.connect(gainNode);
-                    
                     gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
                     oscillator.frequency.value = config.freq;
                     oscillator.type = 'sine';
-                    
                     oscillator.start(audioContext.currentTime);
                     oscillator.stop(audioContext.currentTime + config.duration);
                 }
@@ -2039,11 +2368,12 @@
                     const volume = document.getElementById('volumeSlider').value / 100;
                     playAlarmSound(volume * 0.5);
                     
-                    document.getElementById('timerMessage').innerHTML = `<div class="emotional-feedback positive" style="display: block;">🎉 ${currentLanguage === 'zh' ? '完成了！休息一下吧' : 'Done! Take a break'}</div>`;
+                    document.getElementById('timerMessage').innerHTML = `<div class="emotional-feedback positive" style="display: block;">🎉 ${t('doneMsg')}</div>`;
                     
                     addXP(Math.min(100, inputMinutes * 10));
                     stats.totalMinutes += inputMinutes;
                     localStorage.setItem('stats', JSON.stringify(stats));
+                    updateTopStats();
                     timeLeft = timerDuration;
                 }
             }, 1000);
@@ -2070,10 +2400,11 @@
 
         // ========== 情緒系統 ==========
         function logEmotion(emotion) {
+            const now = new Date();
             emotionLog.push({ 
                 emotion, 
-                time: new Date().toLocaleTimeString(currentLanguage === 'zh' ? 'zh-TW' : 'en-US'),
-                date: new Date().toLocaleDateString(currentLanguage === 'zh' ? 'zh-TW' : 'en-US')
+                time: now.toLocaleTimeString(currentLanguage === 'zh' ? 'zh-TW' : 'en-US'),
+                date: now.toLocaleDateString(currentLanguage === 'zh' ? 'zh-TW' : 'en-US')
             });
             localStorage.setItem('emotionLog', JSON.stringify(emotionLog));
             renderEmotionLog();
@@ -2092,9 +2423,10 @@
             const emotionMapEn = { happy: '😊 Happy', calm: '😌 Calm', sad: '😢 Sad', anxious: '😰 Anxious' };
             const emotionMap = currentLanguage === 'zh' ? emotionMapZh : emotionMapEn;
             const container = document.getElementById('emotionLog');
+            const timeLabel = currentLanguage === 'zh' ? '時間: ' : 'Time: ';
 
             if (emotionLog.length === 0) {
-                container.innerHTML = `<p style="text-align: center; color: var(--text-secondary);">${currentLanguage === 'zh' ? '還沒有記錄。開始記錄你的情緒吧！' : 'No records yet. Start logging your emotions!'}</p>`;
+                container.innerHTML = `<p style="text-align: center; color: var(--text-secondary);">${t('noEmotionText')}</p>`;
                 return;
             }
 
@@ -2150,71 +2482,64 @@
         // ========== 療癒工具 ==========
         function toggleBreathing() {
             const circle = document.getElementById('breathingCircle');
-            const text = document.getElementById('breathText');
 
             if (isBreathingAnimating) {
                 isBreathingAnimating = false;
                 circle.classList.remove('animating');
-                text.innerHTML = currentLanguage === 'zh' ? '點擊開始<br>呼吸練習' : 'Click to Start<br>Breathing';
+                updateBreathingText();
             } else {
                 isBreathingAnimating = true;
                 circle.classList.add('animating');
-                text.innerHTML = currentLanguage === 'zh' ? '跟著圓形呼吸<br>完全放鬆' : 'Breathe with Circle<br>Fully Relax';
+                updateBreathingText();
                 startBreathingSession();
             }
         }
 
         function startBreathingSession() {
-            const breathingStages = ['吸氣...', '屏氣...', '呼氣...'];
-            const breathingStagesEn = ['Inhale...', 'Hold...', 'Exhale...'];
-            const stages = currentLanguage === 'zh' ? breathingStages : breathingStagesEn;
+            const stagesZh = ['吸氣...', '屏氣...', '呼氣...'];
+            const stagesEn = ['Inhale...', 'Hold...', 'Exhale...'];
+            const stages = currentLanguage === 'zh' ? stagesZh : stagesEn;
+            const stageClasses = ['inhale', 'hold', 'exhale'];
             let cycleCount = 0;
             let stageIndex = 0;
             const text = document.getElementById('breathText');
+            const circle = document.getElementById('breathingCircle');
 
-            const cycle = setInterval(() => {
-                if (!isBreathingAnimating) {
-                    clearInterval(cycle);
-                    return;
-                }
+            function runStage() {
+                if (!isBreathingAnimating) return;
 
                 text.innerHTML = stages[stageIndex];
+                
+                // 移除所有動畫類別
+                circle.classList.remove('inhale', 'hold', 'exhale');
+                
+                // 添加當前階段的類別
+                circle.classList.add(stageClasses[stageIndex]);
+                
                 stageIndex++;
-
                 if (stageIndex >= 3) {
                     stageIndex = 0;
                     cycleCount++;
-                    if (cycleCount >= 5) {
-                        clearInterval(cycle);
-                        isBreathingAnimating = false;
-                        document.getElementById('breathingCircle').classList.remove('animating');
-                        text.innerHTML = currentLanguage === 'zh' ? '😌 你做得很好' : '😌 You did great';
-                        addXP(50);
-                        showEmotionalMessage('completion');
-                    }
                 }
-            }, 4000);
+
+                if (cycleCount < 5) {
+                    setTimeout(runStage, 4000);
+                } else {
+                    isBreathingAnimating = false;
+                    circle.classList.remove('animating', 'inhale', 'hold', 'exhale');
+                    text.innerHTML = t('breatingDoneMsg');
+                    addXP(50);
+                    showEmotionalMessage('completion');
+                }
+            }
+
+            runStage();
         }
 
         function openCognitiveRestructuring() {
-            const question = currentLanguage === 'zh' ? '告訴我，你現在的負面想法是什麼？' : 'What negative thought are you having?';
-            const inputModal = document.getElementById('customInputModal');
-            
-            if (!document.getElementById('customInputModal')) {
-                const modal = document.createElement('div');
-                modal.id = 'customInputModal';
-                modal.style.cssText = 'display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-secondary); padding: 30px; border-radius: 16px; border: 1px solid var(--accent-teal); text-align: center; z-index: 2001; min-width: 350px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);';
-                modal.innerHTML = `
-                    <p style="color: var(--text-primary); margin-bottom: 15px;" id="customInputQuestion">${question}</p>
-                    <input type="text" id="customInputField" style="width: 100%; padding: 12px; border: 1px solid var(--accent-teal); border-radius: 8px; background: var(--bg-primary); color: var(--text-primary); margin-bottom: 15px;">
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn" onclick="submitCognitiveInput();" style="flex: 1; margin: 0;">確認</button>
-                        <button class="btn btn-secondary" onclick="closeCognitiveInputModal();" style="flex: 1; margin: 0;">取消</button>
-                    </div>
-                `;
-                document.body.appendChild(modal);
-            }
-
+            document.getElementById('customInputQuestion').textContent = t('customInputQuestion');
+            document.getElementById('submitCognitiveBtn').textContent = t('submitCognitiveBtn');
+            document.getElementById('cancelCognitiveBtn').textContent = t('cancelCognitiveBtn');
             document.getElementById('customInputModal').style.display = 'block';
             document.getElementById('customInputField').focus();
         }
@@ -2278,8 +2603,7 @@
         }
 
         function closeCognitiveInputModal() {
-            const modal = document.getElementById('customInputModal');
-            if (modal) modal.style.display = 'none';
+            document.getElementById('customInputModal').style.display = 'none';
         }
 
         function closeCognitiveResultModal() {
@@ -2287,6 +2611,11 @@
         }
 
         function startGrounding() {
+            groundingCurrentStep = 0;
+            displayGroundingStep();
+        }
+
+        function displayGroundingStep() {
             const stepsZh = [
                 '👀 看見 5 件東西\n請四處看看，說出5件你能看到的東西',
                 '👂 聽見 4 種聲音\n靜聽片刻，察覺周圍4個不同的聲音',
@@ -2304,18 +2633,10 @@
             ];
 
             const steps = currentLanguage === 'zh' ? stepsZh : stepsEn;
-            groundingCurrentStep = 0;
-            displayGroundingStep(steps);
-        }
 
-        function displayGroundingStep(steps) {
             if (groundingCurrentStep >= steps.length) {
-                const finishMsg = currentLanguage === 'zh' 
-                    ? '🌍 接地完成！\n\n你已經回到此刻。感受你的呼吸，感受身體與地面的連結。你很安全。'
-                    : '🌍 Grounding complete!\n\nYou are back in the present. Feel your breath, feel your body connected to the ground. You are safe.';
-                
                 document.getElementById('groundingModal').classList.remove('active');
-                alert(finishMsg);
+                alert(t('groundingCompleteMsg'));
                 addXP(50);
                 showEmotionalMessage('completion');
                 return;
@@ -2325,71 +2646,19 @@
             document.getElementById('groundingStep').textContent = step;
             document.getElementById('groundingNextBtn').textContent = 
                 groundingCurrentStep === steps.length - 1 
-                    ? (currentLanguage === 'zh' ? '完成' : 'Complete')
-                    : (currentLanguage === 'zh' ? '下一步' : 'Next');
+                    ? t('completeBtn')
+                    : t('nextBtn');
             
             document.getElementById('groundingModal').classList.add('active');
         }
 
         function nextGroundingStep() {
-            const steps = currentLanguage === 'zh' 
-                ? ['👀 看見 5 件東西\n請四處看看，說出5件你能看到的東西', '👂 聽見 4 種聲音\n靜聽片刻，察覺周圍4個不同的聲音', '👐 觸摸 3 樣物體\n接觸並感受3件不同質地的物體', '👃 聞到 2 種味道\n找到2個你能聞到的氣味', '👅 嚐到 1 樣東西\n品嚐一個食物或飲料的味道']
-                : ['👀 See 5 things\nLook around and name 5 things you can see', '👂 Hear 4 sounds\nListen and notice 4 different sounds around you', '👐 Touch 3 things\nFeel and touch 3 objects with different textures', '👃 Smell 2 things\nFind and smell 2 different scents', '👅 Taste 1 thing\nTaste a food or drink'];
-            
             groundingCurrentStep++;
-            displayGroundingStep(steps);
+            displayGroundingStep();
         }
 
         // ========== 飲食系統 ==========
         function updateNutritionPage() {
-            const nutritionDataZh = {
-                priority: [
-                    "🐠 奧米加-3脂肪酸（DHA/EPA）- 改善認知功能和注意力",
-                    "🥛 蛋白質 - 穩定血糖，增強去甲腎上腺素分泌",
-                    "🥬 B族維生素（B6、B12、葉酸）- 支持神經傳遞物質合成",
-                    "⚡ 鋅和鎂 - 促進神經健康和情緒調節",
-                    "🍓 抗氧化劑（莓果、深色蔬菜）- 保護大腦細胞",
-                    "🥔 複雜碳水化合物 - 提供穩定的能量"
-                ],
-                eatingOrder: [
-                    "1️⃣ 先吃纖維 - 蔬菜、全穀物、豆類",
-                    "2️⃣ 再吃蛋白質和脂肪 - 肉類、魚、堅果、乳製品",
-                    "3️⃣ 最後吃碳水化合物 - 米飯、麵條、麵包"
-                ],
-                avoid: [
-                    "🚫 高糖食品 - 導致血糖波動和注意力下降",
-                    "🚫 過度加工食品 - 含有人工添加劑和防腐劑",
-                    "🚫 含咖啡因過多飲料 - 可能加重焦慮和不穩定",
-                    "🚫 反式脂肪 - 對大腦和心臟有害",
-                    "🚫 人工色素和香料 - 可能觸發行為問題",
-                    "🚫 過量鹽分 - 影響血壓和神經系統"
-                ]
-            };
-
-            const nutritionDataEn = {
-                priority: [
-                    "🐠 Omega-3 Fatty Acids (DHA/EPA) - Improve cognitive function and attention",
-                    "🥛 Protein - Stabilize blood sugar, enhance norepinephrine secretion",
-                    "🥬 B Vitamins (B6, B12, Folate) - Support neurotransmitter synthesis",
-                    "⚡ Zinc and Magnesium - Promote brain health and mood regulation",
-                    "🍓 Antioxidants (Berries, dark vegetables) - Protect brain cells",
-                    "🥔 Complex Carbohydrates - Provide stable energy"
-                ],
-                eatingOrder: [
-                    "1️⃣ Eat fiber first - Vegetables, whole grains, legumes",
-                    "2️⃣ Then eat protein and fat - Meat, fish, nuts, dairy",
-                    "3️⃣ Finally eat carbohydrates - Rice, pasta, bread"
-                ],
-                avoid: [
-                    "🚫 High-sugar foods - Cause blood sugar spikes and attention drops",
-                    "🚫 Ultra-processed foods - Contain artificial additives and preservatives",
-                    "🚫 Excessive caffeine beverages - May worsen anxiety and instability",
-                    "🚫 Trans fats - Harmful to brain and heart",
-                    "🚫 Artificial dyes and flavorings - May trigger behavioral issues",
-                    "🚫 Excessive salt - Affects blood pressure and nervous system"
-                ]
-            };
-
             const data = currentLanguage === 'zh' ? nutritionDataZh : nutritionDataEn;
 
             document.getElementById('nutritionPriority').innerHTML = data.priority.map(item => 
@@ -2408,7 +2677,7 @@
         // ========== 情緒反饋 ==========
         function showEmotionalMessage(type) {
             const messages = emotionalMessages[type];
-            const msg = messages[Math.floor(Math.random() * messages.length)];
+            const msg = messages[Math.floor(Math.random() * messages.length)][currentLanguage];
             
             document.getElementById('emotionalText').textContent = msg;
             document.getElementById('emotionalMessage').style.display = 'block';
@@ -2451,7 +2720,7 @@
 
             levelText.textContent = (currentLanguage === 'zh' ? '升級到 ' : 'Level Up to ') + 'Lv.' + stats.level + '!';
             const levelUpMessages = emotionalMessages.levelUp;
-            messageText.textContent = levelUpMessages[Math.floor(Math.random() * levelUpMessages.length)];
+            messageText.textContent = levelUpMessages[Math.floor(Math.random() * levelUpMessages.length)][currentLanguage];
 
             modal.style.display = 'block';
 
@@ -2465,6 +2734,8 @@
         updateTopStats();
         updateNutritionPage();
         renderRoutines();
+        renderAssessmentQuestions();
+        renderAssessmentHistory();
     </script>
 </body>
 </html>
